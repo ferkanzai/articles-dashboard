@@ -27,6 +27,6 @@ RUN npm i -g serve
 
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 8080
+EXPOSE 8000
 
-CMD ["serve", "-s", "-l", "8080", "dist"]
+CMD ["serve", "-s", "-l", "8000", "dist"]
