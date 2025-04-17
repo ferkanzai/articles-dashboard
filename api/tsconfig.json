@@ -10,5 +10,14 @@
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "baseUrl": "./",
+    "outDir": "./dist",
+    "forceConsistentCasingInFileNames": true
+  },
+  "tsc-alias": {
+    "resolveFullPaths": true
   }
 }
