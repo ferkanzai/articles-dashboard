@@ -1,13 +1,20 @@
 {
   "name": "api",
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "rimraf dist && tsc && tsc-alias"
   },
   "dependencies": {
     "@hono/node-server": "^1.14.1",
-    "hono": "^4.7.7"
+    "@hono/zod-openapi": "^0.19.4",
+    "@hono/zod-validator": "^0.4.3",
+    "@scalar/hono-api-reference": "^0.8.2",
+    "hono": "^4.7.7",
+    "hono-pino": "^0.8.0",
+    "pino": "^9.6.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.1",
