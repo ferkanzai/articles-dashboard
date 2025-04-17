@@ -26,9 +26,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=sqlite:////data/articles.db
-      - RUN_MIGRATIONS=true
-      - SEED_DATABASE=true
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////data/articles.db}
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
+      - SEED_DATABASE=${SEED_DATABASE:-true}
     volumes:
       - sqlite-data:/data
     depends_on:
@@ -46,14 +46,14 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8000"
     environment:
-      - VITE_API_URL=http://localhost:3000
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3000}
     depends_on:
       api:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080"]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000"]
       interval: 10s
       timeout: 5s
       retries: 5
