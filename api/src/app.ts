@@ -7,7 +7,7 @@ const app = createApp();
 
 configureOpenAPI(app);
 
-app.route("/", status);
+app.route("/health", status);
 
 const routes = [
   index,

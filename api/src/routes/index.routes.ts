@@ -1,8 +1,8 @@
 import { createRoute } from "@hono/zod-openapi";
 
-import { createRouter } from "@/lib/create-app";
 import { createMessageObjectSchema, jsonContent } from "@/helpers/schemas";
-import { OK, UNAUTHORIZED } from "@/lib/http-status-codes";
+import { createRouter } from "@/lib/create-app";
+import { OK } from "@/lib/http-status-codes";
 
 const indexRoute = createRoute({
   tags: ["Index"],
@@ -10,7 +10,6 @@ const indexRoute = createRoute({
   path: "/",
   responses: {
     [OK]: jsonContent(createMessageObjectSchema("Edelman API"), "Edelman API Index"),
-    [UNAUTHORIZED]: jsonContent(createMessageObjectSchema("Unauthorized"), "Unauthorized"),
   },
 });
 

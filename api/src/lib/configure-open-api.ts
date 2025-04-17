@@ -10,7 +10,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     "/api/reference",
     Scalar({
       layout: "modern",
-      defaultHttpClient: { targetKey: "node", clientKey: "fetch" },
+      defaultHttpClient: { targetKey: "js", clientKey: "fetch" },
       url: "/api/doc",
       favicon: "./favicon.ico",
       hideTestRequestButton: true,
