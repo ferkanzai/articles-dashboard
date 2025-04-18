@@ -2,7 +2,7 @@ import { z } from "@hono/zod-openapi";
 
 export type ZodSchema = z.ZodUnion<any> | z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
 
-const createMessageObjectSchema = (exampleMessage: string = "Hello World") => {
+function createMessageObjectSchema(exampleMessage: string = "Hello World") {
   return z.object({
     message: z.string(),
   }).openapi({
@@ -10,13 +10,11 @@ const createMessageObjectSchema = (exampleMessage: string = "Hello World") => {
       message: exampleMessage,
     },
   });
-};
+}
 
-const jsonContent = <
+function jsonContent<
   T extends ZodSchema,
->(schema: T,
-  description: string,
-) => {
+>(schema: T, description: string) {
   return {
     content: {
       "application/json": {
@@ -25,6 +23,6 @@ const jsonContent = <
     },
     description,
   };
-};
+}
 
 export { createMessageObjectSchema, jsonContent };

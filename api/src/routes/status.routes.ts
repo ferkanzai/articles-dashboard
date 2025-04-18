@@ -1,8 +1,8 @@
 import { createRoute } from "@hono/zod-openapi";
 
+import { createMessageObjectSchema, jsonContent } from "@/helpers/schemas";
 import { createRouter } from "@/lib/create-app";
 import { OK } from "@/lib/http-status-codes";
-import { createMessageObjectSchema, jsonContent } from "@/helpers/schemas";
 
 const statusRoute = createRoute({
   tags: ["Status"],

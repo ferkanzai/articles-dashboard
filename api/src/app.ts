@@ -1,7 +1,7 @@
 import configureOpenAPI from "@/lib/configure-open-api";
 import createApp from "@/lib/create-app";
-import status from "@/routes/status.routes";
 import index from "@/routes/index.routes";
+import status from "@/routes/status.routes";
 
 const app = createApp();
 

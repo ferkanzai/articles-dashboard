@@ -1,31 +1,31 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "esModuleInterop": true,
     "incremental": false,
-    "isolatedModules": true,
-    "lib": ["es2022", "DOM", "DOM.Iterable"],
-    "moduleDetection": "force",
-    "moduleResolution": "bundler",
-    "noUncheckedIndexedAccess": true,
-    "resolveJsonModule": true,
     "target": "ESNext",
-    "module": "ESNext",
-    "strict": true,
-    "verbatimModuleSyntax": true,
-    "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
+    "lib": ["es2022", "DOM", "DOM.Iterable"],
+    "moduleDetection": "force",
+    "baseUrl": "./",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "baseUrl": "./",
+    "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types"],
+    "types": [
+      "node"
+    ],
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "declaration": true,
     "outDir": "./dist",
-    "forceConsistentCasingInFileNames": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
   },
   "tsc-alias": {
     "resolveFullPaths": true
