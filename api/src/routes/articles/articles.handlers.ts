@@ -101,13 +101,8 @@ export const listHighlights: AppRouteHandler<ListHighlightsRoute> = async (c) =>
     }, BAD_REQUEST);
   }
 
-  const data = [mostShares, mostViews].map((article, index) => ({
-    ...article,
-    highlight: index === 0 ? "shares" : "views" as "shares" | "views",
-  }));
-
   return c.json({
-    data,
+    data: { mostViews, mostShares },
     success: true,
   }, OK);
 };

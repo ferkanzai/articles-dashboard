@@ -104,10 +104,10 @@ export const list = createRoute({
 });
 
 const highlightsResponseSchema = z.object({
-  data: z.array(z.object({
-    ...selectArticlesWithAuthorSchema.shape,
-    highlight: z.enum(["shares", "views"]),
-  })),
+  data: z.object({
+    mostShares: selectArticlesWithAuthorSchema,
+    mostViews: selectArticlesWithAuthorSchema,
+  }),
 });
 
 export const listHighlights = createRoute({

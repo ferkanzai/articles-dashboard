@@ -171,10 +171,9 @@ describe("articles routes", () => {
         const json = await response.json();
         expectTypeOf(json).toHaveProperty("data");
         expectTypeOf(json).toHaveProperty("success");
-        expect(json.data.length).toBeTypeOf("number");
-        expect(json.data.length).toBe(2);
+        expect(json.data).toHaveProperty("mostViews");
+        expect(json.data).toHaveProperty("mostShares");
         expect(json.success).toBeTypeOf("boolean");
-        expect(json.data[0]?.highlight).toBe("shares");
       }
     });
 
@@ -191,12 +190,10 @@ describe("articles routes", () => {
         const json = await response.json();
         expectTypeOf(json).toHaveProperty("data");
         expectTypeOf(json).toHaveProperty("success");
-        expect(json.data.length).toBeTypeOf("number");
-        expect(json.data.length).toBe(2);
-        expect(json.data[0]?.highlight).toBe("shares");
-        expect(json.data[1]?.highlight).toBe("views");
-        expect(json.data[0]?.author.id).toBe(1);
-        expect(json.data[1]?.author.id).toBe(1);
+        expect(json.data).toHaveProperty("mostViews");
+        expect(json.data).toHaveProperty("mostShares");
+        expect(json.data.mostViews.author.id).toBe(1);
+        expect(json.data.mostShares.author.id).toBe(1);
       }
     });
 
