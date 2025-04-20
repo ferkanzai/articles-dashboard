@@ -20,7 +20,7 @@ const router = createRouter().openapi(statusRoute, (c) => {
     reqId: logger.bindings().reqId,
   });
 
-  return c.json({ message: "OK" }, OK);
+  return c.json({ message: "OK", success: true }, OK);
 });
 
 export default router;

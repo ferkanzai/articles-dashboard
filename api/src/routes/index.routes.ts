@@ -17,7 +17,7 @@ const router = createRouter().openapi(indexRoute, (c) => {
   const { logger } = c.var;
   logger.debug({ msg: "Edelman API Index route hit", reqId: logger.bindings().reqId });
 
-  return c.json({ message: "Edelman API" }, OK);
+  return c.json({ message: "Edelman API", success: true }, OK);
 });
 
 export default router;

@@ -28,15 +28,67 @@ describe("articles routes", () => {
     fs.rmSync("test.db", { force: true });
   });
 
-  it("get /articles lists all articles", async () => {
-    const response = await client.api.articles.$get();
-    expect(response.status).toBe(200);
+  describe("get /articles", () => {
+    it("lists all articles", async () => {
+      const response = await client.api.articles.$get({
+        query: {},
+      });
 
-    if (response.status === 200) {
-      const json = await response.json();
-      expectTypeOf(json).toHaveProperty("data");
-      expectTypeOf(json).toHaveProperty("count");
-      expect(json.data.length).toBeTypeOf("number");
-    }
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("count");
+        expect(json.data.length).toBeTypeOf("number");
+      }
+    });
+
+    it("with query params", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          page: 1,
+          limit: 10,
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("count");
+        expectTypeOf(json).toHaveProperty("hasNextPage");
+        expectTypeOf(json).toHaveProperty("total");
+        expect(json.data.length).toBeTypeOf("number");
+        expect(json.hasNextPage).toBeTypeOf("boolean");
+      }
+    });
+
+    it("with invalid query params", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          // @ts-expect-error - invalid query param
+          page: "invalid",
+        },
+      });
+
+      expect(response.status).toBe(422);
+
+      if (response.status === 422) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("success");
+        expectTypeOf(json).toHaveProperty("error");
+        expect(json.success).toBeTypeOf("boolean");
+        expect(json.error).toBeTypeOf("object");
+        expect(json).toEqual({
+          success: false,
+          error: {
+            issues: expect.any(Array),
+            name: expect.any(String),
+          },
+        });
+      }
+    });
   });
 });

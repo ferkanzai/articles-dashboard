@@ -1,3 +1,5 @@
+import type { AnyZodObject } from "zod";
+
 import { z } from "@hono/zod-openapi";
 
 export type ZodSchema = z.ZodUnion<any> | z.AnyZodObject | z.ZodArray<z.AnyZodObject>;
@@ -5,9 +7,22 @@ export type ZodSchema = z.ZodUnion<any> | z.AnyZodObject | z.ZodArray<z.AnyZodOb
 function createMessageObjectSchema(exampleMessage: string = "Hello World") {
   return z.object({
     message: z.string(),
+    success: z.boolean(),
   }).openapi({
     example: {
       message: exampleMessage,
+      success: true,
+    },
+  });
+}
+
+function createObjectSchemaWithSuccess<T extends AnyZodObject>(extendSchema: T, example: any) {
+  return z.object({
+    success: z.boolean(),
+  }).merge(extendSchema).openapi({
+    example: {
+      ...example,
+      success: true,
     },
   });
 }
@@ -25,4 +40,37 @@ function jsonContent<
   };
 }
 
-export { createMessageObjectSchema, jsonContent };
+function createErrorSchema<
+  T extends ZodSchema,
+>(schema: T) {
+  const { error } = schema.safeParse(
+    schema._def.typeName
+    === z.ZodFirstPartyTypeKind.ZodArray
+      ? []
+      : {},
+  );
+
+  return z.object({
+    success: z.boolean().openapi({
+      example: false,
+    }),
+    error: z
+      .object({
+        issues: z.array(
+          z.object({
+            code: z.string(),
+            path: z.array(
+              z.union([z.string(), z.number()]),
+            ),
+            message: z.string().optional(),
+          }),
+        ),
+        name: z.string(),
+      })
+      .openapi({
+        example: error,
+      }),
+  });
+}
+
+export { createErrorSchema, createMessageObjectSchema, createObjectSchemaWithSuccess, jsonContent };
