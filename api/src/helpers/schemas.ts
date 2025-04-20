@@ -22,7 +22,7 @@ function createObjectSchemaWithSuccess<T extends AnyZodObject>(extendSchema: T, 
   }).merge(extendSchema).openapi({
     example: {
       ...example,
-      success: true,
+      success: example.success ?? true,
     },
   });
 }

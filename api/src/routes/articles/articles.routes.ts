@@ -2,9 +2,26 @@ import { createRoute, z } from "@hono/zod-openapi";
 
 import { selectArticlesWithAuthorSchema } from "@/db/schema";
 import { createErrorSchema, createObjectSchemaWithSuccess, jsonContent } from "@/helpers/schemas";
-import { OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
+import { BAD_REQUEST, OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
 
 const tags = ["Articles"];
+const basePath = "/articles";
+
+const dataExample = [
+  {
+    content: "Article 1 content",
+    created_at: "2021-01-01",
+    id: 1,
+    shares: 10,
+    title: "Article 1",
+    updated_at: "2021-01-01",
+    views: 100,
+    author: {
+      id: 1,
+      name: "John Doe",
+    },
+  },
+];
 
 const querySchema = z.object({
   page: z.coerce.number().int().positive().default(1).openapi({
@@ -56,7 +73,7 @@ const responseSchema = z.object({
 });
 
 export const list = createRoute({
-  path: "/articles",
+  path: `${basePath}`,
   method: "get",
   request: { query: querySchema },
   tags,
@@ -66,21 +83,7 @@ export const list = createRoute({
         responseSchema,
         {
           count: 1,
-          data: [
-            {
-              content: "Article 1 content",
-              created_at: "2021-01-01",
-              id: 1,
-              shares: 10,
-              title: "Article 1",
-              updated_at: "2021-01-01",
-              views: 100,
-              author: {
-                id: 1,
-                name: "John Doe",
-              },
-            },
-          ],
+          data: dataExample,
           hasNextPage: false,
           lastPage: 1,
           total: 1,
@@ -92,4 +95,45 @@ export const list = createRoute({
   },
 });
 
+const highlightsResponseSchema = z.object({
+  data: z.array(z.object({
+    ...selectArticlesWithAuthorSchema.shape,
+    highlight: z.enum(["shares", "views"]),
+  })),
+});
+
+export const listHighlights = createRoute({
+  path: `${basePath}/highlights`,
+  method: "get",
+  request: {
+    query: z.object({
+      authorId: z.coerce.number().int().positive().optional().openapi({
+        example: 3,
+        param: {
+          name: "authorId",
+          description: "The author id to get the highlights from. If not provided, the highlights will be the articles with the highest shares and views",
+          required: false,
+        },
+      }),
+    }).openapi({
+      description: "Query parameters for the highlights list",
+      example: {
+        authorId: 1,
+      },
+    }),
+  },
+  tags,
+  responses: {
+    [OK]: jsonContent(createObjectSchemaWithSuccess(highlightsResponseSchema, { data: dataExample }), "A list of article with highest shares and views"),
+    [BAD_REQUEST]: jsonContent(createObjectSchemaWithSuccess(z.object({
+      message: z.string(),
+    }), {
+      message: "No highlights found for the provided author id",
+      success: false,
+    }), "No highlights found"),
+    [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(querySchema), "Validation error(s)"),
+  },
+});
+
 export type ListRoute = typeof list;
+export type ListHighlightsRoute = typeof listHighlights;

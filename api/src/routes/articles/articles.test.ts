@@ -91,4 +91,90 @@ describe("articles routes", () => {
       }
     });
   });
+
+  describe("get /articles/highlights", () => {
+    it("lists all highlights", async () => {
+      const response = await client.api.articles.highlights.$get({
+        query: {},
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("success");
+        expect(json.data.length).toBeTypeOf("number");
+        expect(json.data.length).toBe(2);
+        expect(json.success).toBeTypeOf("boolean");
+        expect(json.data[0]?.highlight).toBe("shares");
+      }
+    });
+
+    it("list highlights filtered by author id", async () => {
+      const response = await client.api.articles.highlights.$get({
+        query: {
+          authorId: 1,
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("success");
+        expect(json.data.length).toBeTypeOf("number");
+        expect(json.data.length).toBe(2);
+        expect(json.data[0]?.highlight).toBe("shares");
+        expect(json.data[1]?.highlight).toBe("views");
+        expect(json.data[0]?.author.id).toBe(1);
+        expect(json.data[1]?.author.id).toBe(1);
+      }
+    });
+
+    it("list highlights filtered by author id that does not exist", async () => {
+      const response = await client.api.articles.highlights.$get({
+        query: {
+          authorId: 999,
+        },
+      });
+
+      expect(response.status).toBe(400);
+
+      if (response.status === 400) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("success");
+        expect(json).toHaveProperty("message");
+        expect(json.success).toBe(false);
+        expect(json.message).toBeTypeOf("string");
+      }
+    });
+
+    it("with invalid query params", async () => {
+      const response = await client.api.articles.highlights.$get({
+        query: {
+          // @ts-expect-error - invalid query param
+          authorId: "invalid",
+        },
+      });
+
+      expect(response.status).toBe(422);
+
+      if (response.status === 422) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("success");
+        expectTypeOf(json).toHaveProperty("error");
+        expect(json.success).toBeTypeOf("boolean");
+        expect(json.error).toBeTypeOf("object");
+        expect(json).toEqual({
+          success: false,
+          error: {
+            issues: expect.any(Array),
+            name: expect.any(String),
+          },
+        });
+      }
+    });
+  });
 });
