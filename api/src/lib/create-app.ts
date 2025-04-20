@@ -9,6 +9,7 @@ import { appendTrailingSlash } from "hono/trailing-slash";
 
 import type { AppBindings, AppOpenAPI } from "@/lib/types";
 
+import env from "@/env";
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
 import { connInfoMiddleware } from "@/middlewares/get-conn-info";
 import { logger } from "@/middlewares/logger";
@@ -36,13 +37,12 @@ const onError: ErrorHandler = (err, c) => {
     ? currentStatus as StatusCode
     : INTERNAL_SERVER_ERROR;
 
-  // eslint-disable-next-line node/no-process-env
-  const env = c.env?.NODE_ENV || process.env?.NODE_ENV;
+  const environment = c.env?.NODE_ENV || env.NODE_ENV;
 
   return c.json(
     {
       message: err.message,
-      stack: env === "production"
+      stack: environment === "production"
         ? undefined
         : err.stack,
     },

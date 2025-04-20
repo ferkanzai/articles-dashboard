@@ -1,9 +1,9 @@
 import { serve } from "@hono/node-server";
 
 import app from "@/app";
+import env from "@/env";
 
-// eslint-disable-next-line node/no-process-env
-const port = Number(process.env.PORT) || 3000;
+const port = env.PORT;
 
 serve({ ...app, port }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`);

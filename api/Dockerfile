@@ -26,9 +26,12 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 hono
 
 USER hono
+
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json .
 COPY --from=builder /app/pnpm-lock.yaml .
+COPY ./entrypoint.sh ./entrypoint.sh
+COPY ./src/db/drizzle /app/src/db/drizzle
 
-CMD ["node", "dist/src/index.js"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]

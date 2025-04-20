@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1745054553132,
+      "tag": "0000_smart_madelyne_pryor",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1745108564101,
+      "tag": "0001_true_proteus",
+      "breakpoints": true
+    }
+  ]
+}

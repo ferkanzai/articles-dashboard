@@ -10,7 +10,7 @@ export default antfu({
     quotes: "double",
     trailingComma: "all",
   },
-  ignores: ["README.md", "**/migrations/*"],
+  ignores: ["README.md", "**/meta/*"],
 }, {
   rules: {
     "ts/consistent-type-definitions": ["error", "type"],

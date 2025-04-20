@@ -26,16 +26,16 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=${DATABASE_URL:-sqlite:////data/articles.db}
-      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
-      - SEED_DATABASE=${SEED_DATABASE:-true}
+      - DATABASE_URL=${DATABASE_URL:-file:///data/articles.db}
+      - DB_MIGRATING=${DB_MIGRATING:-true}
+      - DB_SEED=${DB_SEED:-true}
     volumes:
       - sqlite-data:/data
     depends_on:
       db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "--spider", "http://localhost:3000/health"]
       interval: 10s
       timeout: 5s
       retries: 5
