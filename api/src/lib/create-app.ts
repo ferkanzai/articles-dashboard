@@ -4,7 +4,6 @@ import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { requestId } from "hono/request-id";
-import { appendTrailingSlash } from "hono/trailing-slash";
 
 import type { AppBindings } from "@/lib/types";
 
@@ -26,6 +25,7 @@ const defaultHook: Hook<any, any, any, any> = (result, c) => {
 const notFound: NotFoundHandler = (c) => {
   return c.json({
     message: `Not Found - ${c.req.path}`,
+    success: false,
   }, NOT_FOUND);
 };
 
@@ -58,7 +58,6 @@ export default function createApp() {
   const app = createRouter();
   app
     .use(serveEmojiFavicon("🚀"))
-    .use(appendTrailingSlash())
     .use(requestId())
     .use(logger())
     .use(connInfoMiddleware())
