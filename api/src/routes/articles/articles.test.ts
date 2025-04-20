@@ -244,4 +244,62 @@ describe("articles routes", () => {
       }
     });
   });
+
+  describe("get /articles/{id}", () => {
+    it("gets an article by id", async () => {
+      const response = await client.api.articles[":id"].$get({
+        param: { id: 1 },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("success");
+        expect(json.data.id).toBe(1);
+        expect(json.success).toBeTypeOf("boolean");
+      }
+    });
+
+    it("with invalid id", async () => {
+      const response = await client.api.articles[":id"].$get({
+        // @ts-expect-error - invalid id
+        param: { id: "invalid" },
+      });
+
+      expect(response.status).toBe(422);
+
+      if (response.status === 422) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("success");
+        expectTypeOf(json).toHaveProperty("error");
+        expect(json.success).toBeTypeOf("boolean");
+        expect(json.success).toBe(false);
+        expect(json.error).toBeTypeOf("object");
+        expect(json).toEqual({
+          success: false,
+          error: {
+            issues: expect.any(Array),
+            name: expect.any(String),
+          },
+        });
+      }
+    });
+
+    it("gets an article by id that does not exist", async () => {
+      const response = await client.api.articles[":id"].$get({
+        param: { id: 999 },
+      });
+
+      expect(response.status).toBe(404);
+
+      if (response.status === 404) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("success");
+        expect(json.success).toBe(false);
+        expect(json.message).toBeTypeOf("string");
+      }
+    });
+  });
 });

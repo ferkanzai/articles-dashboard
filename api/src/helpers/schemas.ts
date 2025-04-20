@@ -73,4 +73,16 @@ function createErrorSchema<
   });
 }
 
-export { createErrorSchema, createMessageObjectSchema, createObjectSchemaWithSuccess, jsonContent };
+const idParamsSchema = z.object({
+  id: z.coerce.number().openapi({
+    param: {
+      name: "id",
+      in: "path",
+      required: true,
+    },
+    required: ["id"],
+    example: 42,
+  }),
+});
+
+export { createErrorSchema, createMessageObjectSchema, createObjectSchemaWithSuccess, idParamsSchema, jsonContent };

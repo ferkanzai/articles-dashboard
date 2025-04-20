@@ -2,11 +2,11 @@
 
 ## TODO
 
-[] Paginate articles
-[] Sorting articles
-[] Filtering articles
-[] Summarize endpoint (mock)
-[] Summarize endpoint (AI)
-[] Return authors
-[] Search articles endpoint
-[] Tests
+- [x] Paginate articles
+- [x] Sorting articles
+- [x] Filtering articles
+- [] Summarize endpoint (mock)
+- [] Summarize endpoint (AI)
+- [] Return authors
+- [] Search articles endpoint
+- [~] Tests

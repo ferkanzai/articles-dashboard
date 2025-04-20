@@ -4,9 +4,9 @@ import type { AppRouteHandler } from "@/lib/types";
 
 import db from "@/db";
 import * as schema from "@/db/schema";
-import { BAD_REQUEST, OK } from "@/lib/http-status-codes";
+import { BAD_REQUEST, NOT_FOUND, OK } from "@/lib/http-status-codes";
 
-import type { ListHighlightsRoute, ListRoute } from "./articles.routes";
+import type { GetArticleRoute, ListHighlightsRoute, ListRoute } from "./articles.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { logger } = c.var;
@@ -108,6 +108,43 @@ export const listHighlights: AppRouteHandler<ListHighlightsRoute> = async (c) =>
 
   return c.json({
     data,
+    success: true,
+  }, OK);
+};
+
+export const getArticle: AppRouteHandler<GetArticleRoute> = async (c) => {
+  const { logger } = c.var;
+  const { id } = c.req.valid("param");
+
+  logger.debug({
+    msg: "Getting article",
+    id,
+  });
+
+  const article = await db.query.articles.findFirst({
+    columns: {
+      authorId: false,
+    },
+    with: {
+      author: {
+        columns: {
+          name: true,
+          id: true,
+        },
+      },
+    },
+    where: eq(schema.articles.id, id),
+  });
+
+  if (!article) {
+    return c.json({
+      message: `Article with id ${id} not found`,
+      success: false,
+    }, NOT_FOUND);
+  }
+
+  return c.json({
+    data: article,
     success: true,
   }, OK);
 };

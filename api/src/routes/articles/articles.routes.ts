@@ -1,8 +1,8 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
 import { selectArticlesWithAuthorSchema } from "@/db/schema";
-import { createErrorSchema, createObjectSchemaWithSuccess, jsonContent } from "@/helpers/schemas";
-import { BAD_REQUEST, OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
+import { createErrorSchema, createObjectSchemaWithSuccess, idParamsSchema, jsonContent } from "@/helpers/schemas";
+import { BAD_REQUEST, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
 
 const tags = ["Articles"];
 const basePath = "/articles";
@@ -143,5 +143,25 @@ export const listHighlights = createRoute({
   },
 });
 
+export const getArticle = createRoute({
+  path: `${basePath}/{id}`,
+  method: "get",
+  request: {
+    params: idParamsSchema,
+  },
+  tags,
+  responses: {
+    [OK]: jsonContent(createObjectSchemaWithSuccess(z.object({ data: selectArticlesWithAuthorSchema }), dataExample[0]), "A single article"),
+    [NOT_FOUND]: jsonContent(createObjectSchemaWithSuccess(z.object({
+      message: z.string(),
+    }), {
+      message: "Article not found",
+      success: false,
+    }), "Article not found"),
+    [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(idParamsSchema), "Invalid id error"),
+  },
+});
+
 export type ListRoute = typeof list;
 export type ListHighlightsRoute = typeof listHighlights;
+export type GetArticleRoute = typeof getArticle;
