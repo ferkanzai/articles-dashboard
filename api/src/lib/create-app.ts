@@ -3,6 +3,7 @@ import type { ErrorHandler, NotFoundHandler } from "hono";
 import type { ContentfulStatusCode, StatusCode } from "hono/utils/http-status";
 
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { cors } from "hono/cors";
 import { requestId } from "hono/request-id";
 
 import type { AppBindings } from "@/lib/types";
@@ -57,6 +58,7 @@ export function createRouter() {
 export default function createApp() {
   const app = createRouter();
   app
+    .use(cors())
     .use(serveEmojiFavicon("🚀"))
     .use(requestId())
     .use(logger())
