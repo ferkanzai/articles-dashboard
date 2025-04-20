@@ -44,7 +44,25 @@ describe("articles routes", () => {
       }
     });
 
-    it("with query params", async () => {
+    it("list articles filtered by author id", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          authorId: 1,
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expectTypeOf(json).toHaveProperty("data");
+        expectTypeOf(json).toHaveProperty("count");
+        expect(json.data.length).toBe(9);
+        expect(json.data[0]?.author.id).toBe(1);
+      }
+    });
+
+    it("with pagination", async () => {
       const response = await client.api.articles.$get({
         query: {
           page: 1,
@@ -88,6 +106,55 @@ describe("articles routes", () => {
             name: expect.any(String),
           },
         });
+      }
+    });
+
+    it("with pagination and filtered by author id", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          authorId: 3,
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expect(json.count).toBe(10);
+        expect(json.total).toBe(11);
+        expect(json.hasNextPage).toBe(true);
+        expect(json.data[0]?.author.id).toBe(3);
+      }
+    });
+
+    it("with sorting by shares", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          sortBy: "shares",
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expect(json.data[0]?.shares).toBeGreaterThan((json.data[1]?.shares ?? 0));
+      }
+    });
+
+    it("with sorting by views ascending", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          sortBy: "views",
+          sort: "asc",
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expect(json.data[0]?.views).toBeLessThan((json.data[1]?.views ?? 0));
       }
     });
   });

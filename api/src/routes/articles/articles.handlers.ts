@@ -10,7 +10,7 @@ import type { ListHighlightsRoute, ListRoute } from "./articles.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { logger } = c.var;
-  const { page, limit, sort, sortBy } = c.req.valid("query");
+  const { page, limit, sort, sortBy, authorId } = c.req.valid("query");
 
   logger.debug({
     msg: "Listing articles",
@@ -31,11 +31,12 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
           },
         },
       },
+      where: authorId ? eq(schema.articles.authorId, authorId) : undefined,
       limit,
       offset: (page - 1) * limit,
       orderBy: sortBy ? [sort === "desc" ? desc(schema.articles[sortBy]) : asc(schema.articles[sortBy])] : undefined,
     }),
-    db.select({ count: count() }).from(schema.articles),
+    db.select({ count: count() }).from(schema.articles).where(authorId ? eq(schema.articles.authorId, authorId) : undefined),
   ]);
 
   const totalCount = total?.count ?? 0;
@@ -95,7 +96,7 @@ export const listHighlights: AppRouteHandler<ListHighlightsRoute> = async (c) =>
 
   if (!mostShares || !mostViews) {
     return c.json({
-      message: `No highlights found for user id ${authorId}`,
+      message: `Author with id ${authorId} has no highlights`,
       success: false,
     }, BAD_REQUEST);
   }

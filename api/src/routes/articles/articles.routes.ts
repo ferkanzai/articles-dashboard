@@ -24,6 +24,14 @@ const dataExample = [
 ];
 
 const querySchema = z.object({
+  authorId: z.coerce.number().int().positive().optional().openapi({
+    example: 3,
+    param: {
+      name: "authorId",
+      description: "The author id to filter articles from. If not provided, articles from all authors will be returned",
+      required: false,
+    },
+  }),
   page: z.coerce.number().int().positive().default(1).openapi({
     example: 3,
     param: {
@@ -128,9 +136,9 @@ export const listHighlights = createRoute({
     [BAD_REQUEST]: jsonContent(createObjectSchemaWithSuccess(z.object({
       message: z.string(),
     }), {
-      message: "No highlights found for the provided author id",
+      message: "Author id has not highlights",
       success: false,
-    }), "No highlights found"),
+    }), "Author id has not highlights"),
     [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(querySchema), "Validation error(s)"),
   },
 });
