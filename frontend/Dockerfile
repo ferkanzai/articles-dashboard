@@ -5,6 +5,9 @@ ENV SHELL=/bin/sh
 ENV PNPM_HOME=/usr/local/bin
 ENV PATH="${PNPM_HOME}:${PATH}"
 
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 RUN apk update
 RUN apk add --no-cache libc6-compat gcompat git python3 make g++
 
