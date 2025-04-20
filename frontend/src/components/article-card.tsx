@@ -27,11 +27,11 @@ export default function ArticleCard({
   article,
   highlight = false,
 }: ArticleCardProps) {
-  const [summary, setSummary] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [summary, _setSummary] = useState<string | null>(null);
+  const [loading, _setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const handleSummarize = async () => {
+  const handleSummarize = () => {
     console.log("Summarizing article", article.id);
   };
 
