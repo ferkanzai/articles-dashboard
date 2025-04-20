@@ -1,6 +1,6 @@
 import { createRoute, z } from "@hono/zod-openapi";
 
-import { selectArticlesSchema } from "@/db/schema";
+import { selectArticlesWithAuthorSchema } from "@/db/schema";
 import { jsonContent } from "@/helpers/schemas";
 import { OK } from "@/lib/http-status-codes";
 
@@ -13,7 +13,7 @@ export const list = createRoute({
   responses: {
     [OK]: jsonContent(
       z.object({
-        data: z.array(selectArticlesSchema),
+        data: z.array(selectArticlesWithAuthorSchema),
         count: z.number().int(),
       }),
       "The list of articles",

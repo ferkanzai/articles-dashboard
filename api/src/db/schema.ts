@@ -38,10 +38,14 @@ export const articlesRelations = relations(articles, ({ one }) => ({
   author: one(authors, { fields: [articles.authorId], references: [authors.id] }),
 }));
 
+export const selectAuthorsSchema = createSelectSchema(authors);
 export const selectArticlesSchema = createSelectSchema(articles, {
   authorId: schema => schema.int().positive(),
   id: schema => schema.int().positive(),
 });
+export const selectArticlesWithAuthorSchema = selectArticlesSchema.extend({
+  author: selectAuthorsSchema.omit({ created_at: true, updated_at: true }),
+}).omit({ authorId: true });
 export const insertArticlesSchema = createInsertSchema(articles, {
   authorId: schema => schema.int().positive(),
 }).required({ authorId: true, content: true, title: true }).omit({ id: true, created_at: true, updated_at: true });
