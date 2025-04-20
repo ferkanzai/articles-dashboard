@@ -17,6 +17,7 @@ RUN apk add --no-cache gcompat
 RUN npm install -g pnpm
 RUN pnpm install
 RUN pnpm build
+RUN pnpm test:run
 
 FROM base AS runner
 

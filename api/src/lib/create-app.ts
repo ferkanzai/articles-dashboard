@@ -7,7 +7,7 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { requestId } from "hono/request-id";
 import { appendTrailingSlash } from "hono/trailing-slash";
 
-import type { AppBindings, AppOpenAPI } from "@/lib/types";
+import type { AppBindings } from "@/lib/types";
 
 import env from "@/env";
 import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK, UNPROCESSABLE_ENTITY } from "@/lib/http-status-codes";
@@ -65,8 +65,4 @@ export default function createApp() {
   app.onError(onError);
 
   return app;
-}
-
-export function createTestApp<R extends AppOpenAPI>(router: R) {
-  return createApp().route("/api", router);
 }
