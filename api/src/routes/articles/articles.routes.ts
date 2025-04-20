@@ -12,7 +12,10 @@ export const list = createRoute({
   tags,
   responses: {
     [OK]: jsonContent(
-      z.array(selectArticlesSchema),
+      z.object({
+        data: z.array(selectArticlesSchema),
+        count: z.number().int(),
+      }),
       "The list of articles",
     ),
   },

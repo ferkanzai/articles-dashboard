@@ -6,5 +6,9 @@ import type { ListRoute } from "./articles.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const articles = await db.query.articles.findMany();
-  return c.json(articles);
+
+  return c.json({
+    data: articles,
+    count: articles.length,
+  });
 };
