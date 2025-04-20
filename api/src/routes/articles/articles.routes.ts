@@ -23,7 +23,7 @@ const querySchema = z.object({
       required: false,
     },
   }),
-  sort: z.enum(["asc", "desc"]).optional().openapi({
+  sort: z.enum(["asc", "desc"]).optional().default("desc").openapi({
     example: "desc",
     param: {
       name: "sort",
