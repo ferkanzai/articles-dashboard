@@ -2,11 +2,10 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 
-import type { ValidRoutes } from "@/types/routes";
-import type { PaginatedArticlesResponse } from "@/api/types";
-import { api } from "@/api";
+import { articlesQueryOptions } from "@/api";
+import { getQueryParams } from "@/lib/utils";
 
-export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
+export const usePagination = ({ pathname }: { pathname: "/" }) => {
   const navigate = useNavigate({ from: pathname });
   const { page, limit, sort, sortBy, authorId } = useSearch({ from: pathname });
   const [pageParam, setPageParam] = useState(page ?? 1);
@@ -16,30 +15,16 @@ export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
   const [authorIdParam, setAuthorIdParam] = useState(authorId);
 
   const params = {
-    page: pageParam.toString(),
-    limit: limitParam.toString(),
+    page: pageParam,
+    limit: limitParam,
     sort: sortParam,
     sortBy: sortByParam,
-    authorId: authorIdParam?.toString(),
+    authorId: authorIdParam,
   };
 
-  const filteredParams = Object.fromEntries(
-    Object.entries(params).filter(([_, value]) => value !== undefined),
-  );
-  const filteredStringParams = Object.fromEntries(
-    Object.entries(filteredParams).map(([key, value]) => [key, String(value)]),
-  );
-  if (sortByParam === undefined) {
-    delete filteredStringParams.sort;
-  }
+  const queryParams = getQueryParams(params);
 
-  const queryParams = new URLSearchParams(filteredStringParams);
-
-  const { data } = useSuspenseQuery({
-    queryKey: ["articles", queryParams],
-    queryFn: () =>
-      api.get<PaginatedArticlesResponse>(`/articles?${queryParams.toString()}`),
-  });
+  const { data } = useSuspenseQuery(articlesQueryOptions(queryParams));
 
   const responseArticles = data.data;
   const { lastPage } = responseArticles;
@@ -61,6 +46,7 @@ export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
         };
       },
       replace: true,
+      resetScroll: false,
     });
   }, [
     pageParam,

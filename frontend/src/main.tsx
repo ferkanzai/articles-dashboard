@@ -36,7 +36,7 @@ if (rootElement && !rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <TanstackQuery.Provider>
-        <RouterProvider router={router} />
+        <RouterProvider router={router} defaultPreload="intent" />
       </TanstackQuery.Provider>
     </StrictMode>,
   )

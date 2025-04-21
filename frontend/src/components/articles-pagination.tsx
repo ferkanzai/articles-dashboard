@@ -1,6 +1,5 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
 
-import type { ValidRoutes } from "@/types/routes";
 import {
   Pagination,
   PaginationContent,
@@ -16,7 +15,7 @@ import { cn } from "@/lib/utils";
 export default function ArticlesPagination({
   pathname,
 }: {
-  pathname: ValidRoutes;
+  pathname: "/";
 }) {
   const { pageParam, setPageParam, lastPage } = usePagination({
     pathname,
@@ -26,11 +25,9 @@ export default function ArticlesPagination({
   const pagesToShow =
     pageParam > 3 && pageParam < lastPage
       ? pages.slice(pageParam - 3, pageParam + 1)
-      : pageParam === lastPage
+      : pageParam === lastPage && lastPage > 4
         ? pages.slice(lastPage - 4)
         : pages.slice(0, 4);
-
-  console.log({ pageParam, lastPage });
 
   const isFirstPage = pageParam === 1;
   const isLastPage = pageParam === lastPage;
