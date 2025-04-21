@@ -16,6 +16,9 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     msg: "Listing articles",
     page,
     limit,
+    sort,
+    sortBy,
+    authorId,
   });
 
   const [articles, [total]] = await Promise.all([
