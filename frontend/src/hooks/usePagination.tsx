@@ -83,5 +83,9 @@ export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
     lastPage: lastPage ?? 1,
     pageParam,
     setPageParam,
+    setLimitParam,
+    setSortParam,
+    setSortByParam,
+    setAuthorIdParam,
   };
 };
