@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+
 import type { ValidRoutes } from "@/types/routes";
-import type { Article } from "@/api/types";
+import type { PaginatedArticlesResponse } from "@/api/types";
 import { api } from "@/api";
 
 export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
@@ -34,24 +35,17 @@ export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
 
   const queryParams = new URLSearchParams(filteredStringParams);
 
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: ["articles", queryParams],
     queryFn: () =>
-      api.get<{
-        data: Array<Article>;
-        success: boolean;
-        count: number;
-        hasNextPage: boolean;
-        lastPage: number;
-        total: number;
-      }>(`/articles?${queryParams.toString()}`),
+      api.get<PaginatedArticlesResponse>(`/articles?${queryParams.toString()}`),
   });
 
-  const responseArticles = data?.data;
-  const { hasNextPage, lastPage } = responseArticles ?? {};
+  const responseArticles = data.data;
+  const { lastPage } = responseArticles;
 
   useEffect(() => {
-    if (pageParam !== 1 && page !== 1 && lastPage !== undefined && pageParam > lastPage) {
+    if (pageParam !== 1 && page !== 1 && pageParam > lastPage) {
       setPageParam(1);
     }
 
@@ -79,8 +73,7 @@ export const usePagination = ({ pathname }: { pathname: ValidRoutes }) => {
   ]);
 
   return {
-    hasNextPage: hasNextPage ?? pageParam < (lastPage ?? 1),
-    lastPage: lastPage ?? 1,
+    lastPage,
     pageParam,
     setPageParam,
     setLimitParam,

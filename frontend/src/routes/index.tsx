@@ -4,7 +4,8 @@ import {
   retainSearchParams
 } from "@tanstack/react-router";
 import { z } from "zod";
-import type { Article } from "@/api/types";
+
+import type { Article, PaginatedArticlesResponse } from "@/api/types";
 import { api } from "@/api";
 import ArticleCard from "@/components/article-card";
 import ArticleHighlights from "@/components/article-highlights";
@@ -22,14 +23,7 @@ const articlesQueryOptions = (opts: {
     queryKey: ["articles", opts],
     queryFn: () => {
       const queryParams = new URLSearchParams(opts);
-      return api.get<{
-        data: Array<Article>;
-        success: boolean;
-        count: number;
-        hasNextPage: boolean;
-        lastPage: number;
-        total: number;
-      }>(`/articles?${queryParams.toString()}`);
+      return api.get<PaginatedArticlesResponse>(`/articles?${queryParams.toString()}`);
     },
   });
 

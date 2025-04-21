@@ -1,4 +1,5 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
+
 import type { ValidRoutes } from "@/types/routes";
 import {
   Pagination,
@@ -17,19 +18,22 @@ export default function ArticlesPagination({
 }: {
   pathname: ValidRoutes;
 }) {
-  const { pageParam, setPageParam, lastPage, hasNextPage } = usePagination({
+  const { pageParam, setPageParam, lastPage } = usePagination({
     pathname,
   });
 
   const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
   const pagesToShow =
     pageParam > 3 && pageParam < lastPage
-      ? pages.slice(pageParam - 2, pageParam + 1)
+      ? pages.slice(pageParam - 3, pageParam + 1)
       : pageParam === lastPage
-        ? pages.slice(lastPage - 3)
-        : pages.slice(0, 3);
+        ? pages.slice(lastPage - 4)
+        : pages.slice(0, 4);
 
   console.log({ pageParam, lastPage });
+
+  const isFirstPage = pageParam === 1;
+  const isLastPage = pageParam === lastPage;
 
   return (
     <Pagination>
@@ -38,11 +42,11 @@ export default function ArticlesPagination({
           <PaginationLink
             className={cn(
               "select-none",
-              pageParam > 1 ? "cursor-pointer" : "cursor-not-allowed",
+              !isFirstPage ? "cursor-pointer" : "cursor-not-allowed",
             )}
-            isActive={pageParam > 1}
+            isActive={!isFirstPage}
             onClick={() => {
-              if (pageParam > 1) {
+              if (!isFirstPage) {
                 setPageParam(1);
               }
             }}
@@ -55,17 +59,17 @@ export default function ArticlesPagination({
           <PaginationPrevious
             className={cn(
               "select-none",
-              pageParam > 1 ? "cursor-pointer" : "cursor-not-allowed",
+              !isFirstPage ? "cursor-pointer" : "cursor-not-allowed",
             )}
-            isActive={pageParam > 1}
+            isActive={!isFirstPage}
             onClick={() => {
-              if (pageParam > 1) {
+              if (!isFirstPage) {
                 setPageParam(pageParam - 1);
               }
             }}
           />
         </PaginationItem>
-        {pageParam > 3 && (
+        {!isFirstPage && pageParam > 3 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
@@ -85,7 +89,7 @@ export default function ArticlesPagination({
             </PaginationLink>
           </PaginationItem>
         ))}
-        {pageParam < lastPage - 1 && pageParam >= 3 && lastPage > 3 && (
+        {!isLastPage && lastPage > 4 && lastPage - pageParam >= 2 && (
           <PaginationItem>
             <PaginationEllipsis />
           </PaginationItem>
@@ -94,13 +98,11 @@ export default function ArticlesPagination({
           <PaginationNext
             className={cn(
               "select-none",
-              hasNextPage && pageParam < lastPage
-                ? "cursor-pointer"
-                : "cursor-not-allowed",
+              !isLastPage ? "cursor-pointer" : "cursor-not-allowed",
             )}
-            isActive={hasNextPage && pageParam < lastPage}
+            isActive={!isLastPage}
             onClick={() => {
-              if (hasNextPage && pageParam < lastPage) {
+              if (!isLastPage) {
                 setPageParam(pageParam + 1);
               }
             }}
@@ -110,13 +112,11 @@ export default function ArticlesPagination({
           <PaginationLink
             className={cn(
               "select-none",
-              hasNextPage && pageParam < lastPage
-                ? "cursor-pointer"
-                : "cursor-not-allowed",
+              !isLastPage ? "cursor-pointer" : "cursor-not-allowed",
             )}
-            isActive={pageParam !== lastPage}
+            isActive={!isLastPage}
             onClick={() => {
-              if (pageParam !== lastPage) {
+              if (!isLastPage) {
                 setPageParam(lastPage);
               }
             }}

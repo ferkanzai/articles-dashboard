@@ -12,3 +12,11 @@ export type Article = {
   }
 };
 
+export type PaginatedArticlesResponse = {
+  data: Array<Article>;
+  success: boolean;
+  count: number;
+  hasNextPage: boolean;
+  lastPage: number;
+  total: number;
+};
