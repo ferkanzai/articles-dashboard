@@ -30,6 +30,6 @@ RUN npm i -g serve
 
 COPY --from=builder /app/dist ./dist
 
-EXPOSE 8000
+EXPOSE 5173
 
-CMD ["serve", "-s", "-l", "8000", "dist"]
+CMD ["serve", "-s", "-l", "5173", "dist"]
