@@ -1,18 +1,21 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useSearch } from "@tanstack/react-router";
+import { useEffect } from "react";
 
+import { useSearchParams } from "./useSearchParams";
 import { articlesQueryOptions } from "@/api";
 import { getQueryParams } from "@/lib/utils";
 
 export const usePagination = ({ pathname }: { pathname: "/" }) => {
-  const navigate = useNavigate({ from: pathname });
-  const { page, limit, sort, sortBy, authorId } = useSearch({ from: pathname });
-  const [pageParam, setPageParam] = useState(page ?? 1);
-  const [limitParam, setLimitParam] = useState(limit ?? 10);
-  const [sortParam, setSortParam] = useState(sort ?? "desc");
-  const [sortByParam, setSortByParam] = useState(sortBy);
-  const [authorIdParam, setAuthorIdParam] = useState(authorId);
+  const { page } = useSearch({ from: pathname });
+  const {
+    pageParam,
+    limitParam,
+    sortParam,
+    sortByParam,
+    authorIdParam,
+    setPageParam,
+  } = useSearchParams({ pathname });
 
   const params = {
     page: pageParam,
@@ -33,38 +36,9 @@ export const usePagination = ({ pathname }: { pathname: "/" }) => {
     if (pageParam !== 1 && page !== 1 && pageParam > lastPage) {
       setPageParam(1);
     }
-
-    navigate({
-      search: (old) => {
-        return {
-          ...old,
-          page: pageParam,
-          limit: limitParam,
-          sort: sortByParam ? sortParam : undefined,
-          sortBy: sortByParam,
-          authorId: authorIdParam,
-        };
-      },
-      replace: true,
-      resetScroll: false,
-    });
-  }, [
-    pageParam,
-    limitParam,
-    sortParam,
-    sortByParam,
-    authorIdParam,
-    lastPage,
-    navigate,
-  ]);
+  }, [pageParam, lastPage]);
 
   return {
-    lastPage,
-    pageParam,
-    setPageParam,
-    setLimitParam,
-    setSortParam,
-    setSortByParam,
-    setAuthorIdParam,
-  };
+    lastPage
+  }
 };

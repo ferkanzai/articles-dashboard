@@ -10,16 +10,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { usePagination } from "@/hooks/usePagination";
+import { useSearchParams } from "@/hooks/useSearchParams";
 import { cn } from "@/lib/utils";
 
-export default function ArticlesPagination({
-  pathname,
-}: {
-  pathname: "/";
-}) {
-  const { pageParam, setPageParam, lastPage } = usePagination({
-    pathname,
-  });
+export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
+  const { lastPage } = usePagination({ pathname });
+  const { pageParam, setPageParam } = useSearchParams({ pathname });
 
   const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
   const pagesToShow =

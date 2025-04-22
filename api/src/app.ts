@@ -1,6 +1,7 @@
 import configureOpenAPI from "@/lib/configure-open-api";
 import createApp from "@/lib/create-app";
 import articles from "@/routes/articles/articles.index";
+import authors from "@/routes/authors/authors.index";
 import index from "@/routes/index.routes";
 import status from "@/routes/status.routes";
 
@@ -11,8 +12,9 @@ configureOpenAPI(app);
 app.route("/health", status);
 
 const routes = [
-  index,
   articles,
+  authors,
+  index,
 ] as const;
 
 routes.forEach((route) => {

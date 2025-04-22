@@ -20,3 +20,14 @@ export type PaginatedArticlesResponse = {
   lastPage: number;
   total: number;
 };
+
+export type Author = {
+  id: number;
+  name: string;
+};
+
+export type AuthorsResponse = {
+  data: Array<Author>;
+  success: boolean;
+  count: number;
+};
