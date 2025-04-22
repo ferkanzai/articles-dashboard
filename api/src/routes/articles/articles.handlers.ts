@@ -5,8 +5,9 @@ import type { AppRouteHandler } from "@/lib/types";
 import db from "@/db";
 import * as schema from "@/db/schema";
 import { BAD_REQUEST, NOT_FOUND, OK } from "@/lib/http-status-codes";
+import { generateArticleSummary } from "@/services/openai";
 
-import type { GetArticleRoute, ListHighlightsRoute, ListRoute } from "./articles.routes";
+import type { GetArticleRoute, ListHighlightsRoute, ListRoute, SummarizeArticleRoute } from "./articles.routes";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { logger } = c.var;
@@ -143,6 +144,47 @@ export const getArticle: AppRouteHandler<GetArticleRoute> = async (c) => {
 
   return c.json({
     data: article,
+    success: true,
+  }, OK);
+};
+
+export const summarizeArticle: AppRouteHandler<SummarizeArticleRoute> = async (c) => {
+  const { logger } = c.var;
+  const { id } = c.req.valid("param");
+
+  logger.debug({
+    msg: "Summarizing article",
+    id,
+  });
+
+  const article = await db.query.articles.findFirst({
+    columns: {
+      authorId: false,
+    },
+    with: {
+      author: {
+        columns: {
+          name: true,
+          id: true,
+        },
+      },
+    },
+    where: eq(schema.articles.id, id),
+  });
+
+  if (!article) {
+    return c.json({
+      message: `Article with id ${id} not found`,
+      success: false,
+    }, NOT_FOUND);
+  }
+
+  const summary = await generateArticleSummary(c, article);
+
+  return c.json({
+    data: {
+      summary,
+    },
     success: true,
   }, OK);
 };

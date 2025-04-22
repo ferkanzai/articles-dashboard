@@ -1,3 +1,5 @@
+import type { z } from "zod";
+
 import { relations, sql } from "drizzle-orm";
 import * as t from "drizzle-orm/sqlite-core";
 import { sqliteTable as table } from "drizzle-orm/sqlite-core";
@@ -49,3 +51,5 @@ export const selectArticlesWithAuthorSchema = selectArticlesSchema.extend({
 export const insertArticlesSchema = createInsertSchema(articles, {
   authorId: schema => schema.int().positive(),
 }).required({ authorId: true, content: true, title: true }).omit({ id: true, created_at: true, updated_at: true });
+
+export type ArticleWithAuthor = z.infer<typeof selectArticlesWithAuthorSchema>;

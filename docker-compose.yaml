@@ -29,6 +29,7 @@ services:
       - DATABASE_URL=${DATABASE_URL:-file:///data/articles.db}
       - DB_MIGRATING=${DB_MIGRATING:-true}
       - DB_SEED=${DB_SEED:-true}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
     volumes:
       - sqlite-data:/data
     depends_on:

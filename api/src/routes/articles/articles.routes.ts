@@ -162,6 +162,34 @@ export const getArticle = createRoute({
   },
 });
 
+export const summarizeArticle = createRoute({
+  path: `${basePath}/{id}/summarize`,
+  method: "post",
+  request: {
+    params: idParamsSchema,
+  },
+  tags,
+  responses: {
+    [OK]: jsonContent(createObjectSchemaWithSuccess(z.object({
+      data: z.object({
+        summary: z.string(),
+      }),
+    }), {
+      data: {
+        summary: "Article summary",
+      },
+    }), "Article summarized"),
+    [NOT_FOUND]: jsonContent(createObjectSchemaWithSuccess(z.object({
+      message: z.string(),
+    }), {
+      message: "Article not found",
+      success: false,
+    }), "Article not found"),
+    [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(idParamsSchema), "Invalid id error"),
+  },
+});
+
 export type ListRoute = typeof list;
 export type ListHighlightsRoute = typeof listHighlights;
 export type GetArticleRoute = typeof getArticle;
+export type SummarizeArticleRoute = typeof summarizeArticle;

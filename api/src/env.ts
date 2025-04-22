@@ -22,6 +22,7 @@ const EnvSchema = z.object({
   DB_SEED: stringBoolean,
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace", "silent"]).default("info"),
   NODE_ENV: z.union([z.literal("development"), z.literal("test"), z.literal("production")]).default("development"),
+  OPENAI_API_KEY: z.string().optional(),
   PORT: z.coerce.number().default(3000),
 }).superRefine((input, ctx) => {
   if (input.NODE_ENV === "production" && input.LOG_LEVEL === "debug") {

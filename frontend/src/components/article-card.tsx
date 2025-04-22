@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Eye, Share2 } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
 import type { Article } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { api } from "@/api";
 
 interface ArticleCardProps {
   article: Article;
@@ -27,13 +29,32 @@ export default function ArticleCard({
   article,
   highlight = false,
 }: ArticleCardProps) {
-  const [summary, _setSummary] = useState<string | null>(null);
-  const [loading, _setLoading] = useState(false);
+  const [summary, setSummary] = useState<string | null>(null);
   const [open, setOpen] = useState(false);
+
+  const summarizeArticle = useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      const response = await api.post<{ data: { summary: string }; success: boolean }>(`/articles/${id}/summarize`);
+      return response.data;
+    },
+    onSuccess: (data) => {
+      console.log("Success", data);
+      setSummary(data.data.summary);
+    },
+  });
 
   const handleSummarize = () => {
     console.log("Summarizing article", article.id);
+    summarizeArticle.mutate({ id: article.id });
   };
+
+  useEffect(() => {
+    if (summary) {
+      setOpen(true);
+    }
+  }, [summary]);
+
+  console.log("Summary", summary);
 
   return (
     <>
@@ -60,16 +81,21 @@ export default function ArticleCard({
         <CardFooter>
           <Button
             onClick={handleSummarize}
-            disabled={loading}
+            disabled={summarizeArticle.isPending}
             variant="outline"
-            className="w-full"
+            className="w-full cursor-pointer"
           >
-            {loading ? "Generating..." : "Summarize"}
+            {summarizeArticle.isPending ? "Generating..." : "Summarize"}
           </Button>
         </CardFooter>
       </Card>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={(openValue) => {
+        setOpen(openValue);
+        if (!openValue) {
+          setSummary(null);
+        }
+      }}>
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="mb-2">{article.title}</DialogTitle>
