@@ -25,10 +25,7 @@ export default async function seed(db: DBType) {
 
       await db.insert(schema.articles).values({
         authorId,
-        content: article.content,
-        shares: article.shares,
-        title: article.title,
-        views: article.views,
+        ...article,
       });
     }),
   );

@@ -28,6 +28,7 @@ export const articles = table("articles", {
   shares: t.int("likes").notNull().default(0),
   title: t.text("title").notNull(),
   views: t.int("views").notNull().default(0),
+  summary: t.text("summary"),
 
   ...timestamps,
 }, table => [

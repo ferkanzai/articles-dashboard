@@ -13,6 +13,12 @@ const client = env.OPENAI_API_KEY
   })
   : undefined;
 
+async function returnMockSummary(article: ArticleWithAuthor) {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  return article.summary ?? article.content;
+}
+
 async function generateArticleSummary(c: Context<AppBindings>, article: ArticleWithAuthor) {
   const { logger } = c.var;
   try {
@@ -20,7 +26,8 @@ async function generateArticleSummary(c: Context<AppBindings>, article: ArticleW
       logger.error({
         msg: "OpenAI client not found",
       });
-      return article.content;
+
+      return returnMockSummary(article);
     }
 
     logger.info({
@@ -63,7 +70,7 @@ async function generateArticleSummary(c: Context<AppBindings>, article: ArticleW
       error,
     });
 
-    return article.content;
+    return returnMockSummary(article);
   }
 }
 
