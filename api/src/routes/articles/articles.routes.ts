@@ -64,6 +64,13 @@ const querySchema = z.object({
       required: false,
     },
   }),
+  search: z.string().optional().openapi({
+    example: "Article 1",
+    param: {
+      name: "search",
+      description: "The search query",
+    },
+  }),
 }).openapi({
   description: "Query parameters for the articles list",
   example: {
@@ -110,26 +117,26 @@ const highlightsResponseSchema = z.object({
   }),
 });
 
+const queryHighlightsSchema = z.object({
+  authorId: z.coerce.number().int().positive().optional().openapi({
+    example: 3,
+    param: {
+      name: "authorId",
+      description: "The author id to get the highlights from. If not provided, the highlights will be the articles with the highest shares and views",
+      required: false,
+    },
+  }),
+}).openapi({
+  description: "Query parameters for the highlights list",
+  example: {
+    authorId: 1,
+  },
+});
+
 export const listHighlights = createRoute({
   path: `${basePath}/highlights`,
   method: "get",
-  request: {
-    query: z.object({
-      authorId: z.coerce.number().int().positive().optional().openapi({
-        example: 3,
-        param: {
-          name: "authorId",
-          description: "The author id to get the highlights from. If not provided, the highlights will be the articles with the highest shares and views",
-          required: false,
-        },
-      }),
-    }).openapi({
-      description: "Query parameters for the highlights list",
-      example: {
-        authorId: 1,
-      },
-    }),
-  },
+  request: { query: queryHighlightsSchema },
   tags,
   responses: {
     [OK]: jsonContent(createObjectSchemaWithSuccess(highlightsResponseSchema, { data: dataExample }), "A list of article with highest shares and views"),
@@ -139,7 +146,7 @@ export const listHighlights = createRoute({
       message: "Author id has not highlights",
       success: false,
     }), "Author id has not highlights"),
-    [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(querySchema), "Validation error(s)"),
+    [UNPROCESSABLE_ENTITY]: jsonContent(createErrorSchema(queryHighlightsSchema), "Validation error(s)"),
   },
 });
 

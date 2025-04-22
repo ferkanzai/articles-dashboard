@@ -172,6 +172,37 @@ describe("articles routes", () => {
         expect(json.data[0]?.views).toBeLessThan((json.data[1]?.views ?? 0));
       }
     });
+
+    it("with good search", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          search: "usain",
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expect(json.data.length).toBe(8);
+        expect(json.data[0]?.title.toLowerCase()).toContain("usain");
+      }
+    });
+
+    it("with bad search", async () => {
+      const response = await client.api.articles.$get({
+        query: {
+          search: "invalid",
+        },
+      });
+
+      expect(response.status).toBe(200);
+
+      if (response.status === 200) {
+        const json = await response.json();
+        expect(json.data.length).toBe(0);
+      }
+    });
   });
 
   describe("get /articles/highlights", () => {

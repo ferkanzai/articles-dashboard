@@ -35,6 +35,8 @@ export const articles = table("articles", {
   t.uniqueIndex("author_id_title_idx").on(table.authorId, table.title),
   t.index("author_id_idx").on(table.authorId),
   t.index("created_at_idx").on(table.created_at),
+  t.index("title_idx").on(table.title),
+  t.index("content_idx").on(table.content),
 ]);
 
 export const articlesRelations = relations(articles, ({ one }) => ({

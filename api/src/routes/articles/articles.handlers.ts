@@ -1,4 +1,4 @@
-import { asc, count, desc, eq } from "drizzle-orm";
+import { and, asc, count, desc, eq, like, or } from "drizzle-orm";
 
 import type { AppRouteHandler } from "@/lib/types";
 
@@ -11,7 +11,7 @@ import type { GetArticleRoute, ListHighlightsRoute, ListRoute, SummarizeArticleR
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const { logger } = c.var;
-  const { page, limit, sort, sortBy, authorId } = c.req.valid("query");
+  const { page, limit, sort, sortBy, authorId, search } = c.req.valid("query");
 
   logger.debug({
     msg: "Listing articles",
@@ -20,7 +20,23 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     sort,
     sortBy,
     authorId,
+    search,
   });
+
+  const where = [
+    authorId ? eq(schema.articles.authorId, authorId) : undefined,
+    search ? or(like(schema.articles.title, `% ${search} %`), like(schema.articles.content, `% ${search} %`)) : undefined,
+  ].filter(Boolean).reduce((acc, curr) => {
+    if (acc && curr) {
+      return and(acc, curr);
+    }
+
+    if (!acc && curr) {
+      return curr;
+    }
+
+    return acc;
+  }, undefined);
 
   const [articles, [total]] = await Promise.all([
     db.query.articles.findMany({
@@ -35,12 +51,12 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
           },
         },
       },
-      where: authorId ? eq(schema.articles.authorId, authorId) : undefined,
+      where,
       limit,
       offset: (page - 1) * limit,
       orderBy: sortBy ? [sort === "desc" ? desc(schema.articles[sortBy]) : asc(schema.articles[sortBy])] : undefined,
     }),
-    db.select({ count: count() }).from(schema.articles).where(authorId ? eq(schema.articles.authorId, authorId) : undefined),
+    db.select({ count: count() }).from(schema.articles).where(where),
   ]);
 
   const totalCount = total?.count ?? 0;
