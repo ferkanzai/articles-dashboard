@@ -7,7 +7,7 @@ import type { AppBindings } from "@/lib/types";
 
 import env from "@/env";
 
-const client = env.OPENAI_API_KEY
+export const client = env.OPENAI_API_KEY
   ? new OpenAI({
     apiKey: env.OPENAI_API_KEY,
   })
@@ -45,11 +45,7 @@ async function generateArticleSummary(c: Context<AppBindings>, article: ArticleW
         },
         {
           role: "user",
-          content: `
-          Title: ${article.title}
-          Author: ${article.author.name}
-          Content: ${article.content}
-        `,
+          content: `Title: ${article.title}. Author: ${article.author.name}. Content: ${article.content}`,
         },
         {
           role: "user",
