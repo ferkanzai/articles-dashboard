@@ -1,16 +1,10 @@
 import { testClient } from "hono/testing";
-import { execSync } from "node:child_process";
-import fs from "node:fs";
-import { afterAll, beforeAll, describe, expect, expectTypeOf, it, vi } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 
 import env from "@/env";
 import createApp from "@/lib/create-app";
 
 import router from "./articles.index";
-
-vi.mock("@/middlewares/get-conn-info", () => ({
-  connInfoMiddleware: () => (_c: any, next: any) => next(),
-}));
 
 if (env.NODE_ENV !== "test") {
   throw new Error("NODE_ENV must be 'test'");
@@ -19,15 +13,6 @@ if (env.NODE_ENV !== "test") {
 const client = testClient(createApp().route("/api", router));
 
 describe("articles routes", () => {
-  beforeAll(async () => {
-    execSync("pnpm drizzle-kit push");
-    execSync("pnpm db:seed");
-  });
-
-  afterAll(async () => {
-    fs.rmSync("test.db", { force: true });
-  });
-
   describe("get /articles", () => {
     it("lists all articles", async () => {
       const response = await client.api.articles.$get({
