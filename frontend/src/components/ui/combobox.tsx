@@ -57,12 +57,15 @@ export function Combobox({
               {values.map((valueToSelect) => (
                 <CommandItem
                   key={valueToSelect.value}
-                  value={valueToSelect.value}
+                  value={valueToSelect.label}
                   onSelect={(currentValue) => {
-                    if (currentValue === value) {
+                    const valueFound = values.find(({ label }) =>
+                      currentValue.toLowerCase().includes(label.toLowerCase()),
+                    )?.value;
+                    if (valueFound === value) {
                       setValue(undefined);
                     } else {
-                      setValue(currentValue);
+                      setValue(valueFound);
                     }
                     setOpen(false);
                   }}
