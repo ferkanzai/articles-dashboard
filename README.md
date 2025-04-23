@@ -129,3 +129,7 @@ I know the assignment said the summarize button should mock the summary, but we 
 ### DB Seeding
 
 When you are creating the app with docker compose, it creates the whole DB data and creates some mocked data (this was AI built, so it's a bit repetitive). It's good because you don't need to think about filling the DB and also because the app doesn't have that capability either.
+
+### Testing
+
+I decided not to focus 100% on testing, but I wanted to do some tests in order to ensure everything works as expected. I tested more in depth the API in order to ensure the endpoints return what they should and then in the frontend I tested a couple of components with "core" logic (pagination, for instance) to ensure smooth working and avoid regressions.
