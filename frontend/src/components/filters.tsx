@@ -1,28 +1,31 @@
 import { useSearch } from "@tanstack/react-router";
-import { ChevronsUpDownIcon, FilterIcon } from "lucide-react";
+import {
+  ListFilterIcon,
+  XIcon
+} from "lucide-react";
 import { Suspense, useState } from "react";
 import { AuthorFilter } from "./author-filter";
 import { Spinner } from "./spinner";
+import { Badge } from "./ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function Filters() {
-  const { limit, sortBy, sort } = useSearch({ from: "/" });
+  const { sortBy, sort, authorId } = useSearch({ from: "/" });
   const { navigate } = useUpdateNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -31,152 +34,156 @@ export default function Filters() {
   const sortOptions = ["desc", "asc"];
 
   return (
-    <Collapsible
-      open={isOpen}
-      onOpenChange={setIsOpen}
-      className="border-1 border-blue-600/20 p-2 rounded-md"
-    >
-      <CollapsibleTrigger className="flex items-center gap-2 w-full cursor-pointer justify-between px-6">
-        <span className="flex items-center gap-2">
-          <FilterIcon className="w-4 h-4" />
-          <span>Filters</span>
-        </span>
-        <ChevronsUpDownIcon className="w-4 h-4" />
-      </CollapsibleTrigger>
-      <CollapsibleContent>
-        <Card className="border-none shadow-none">
-          <CardHeader>
-            <CardTitle>Filters</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="gap-4 flex flex-col lg:flex-row justify-between">
-              <div className="space-y-2">
-                <Label className="font-bold">Articles per page</Label>
-                <Select
-                  onValueChange={(value) =>
-                    navigate({ limit: parseInt(value) })
-                  }
-                  value={limit ? limit.toString() : "10"}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Articles per page" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="5">5</SelectItem>
-                    <SelectItem value="10">10</SelectItem>
-                    <SelectItem value="20">20</SelectItem>
-                    <SelectItem value="50">50</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="font-bold">Filter by Author</Label>
-                <Suspense fallback={<Spinner size="small" />}>
-                  <AuthorFilter />
-                </Suspense>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="font-bold">Sorting by</Label>
-                <RadioGroup
-                  value={sortBy ? sortBy : "none"}
-                  onValueChange={(value) => {
-                    if (value === "none") {
-                      navigate({ sortBy: undefined, sort: "desc", page: 1 });
-                    } else {
-                      navigate({
-                        page: 1,
-                        sortBy: value as "views" | "shares",
-                        sort: "desc",
-                      });
-                    }
-                  }}
-                  className="grid grid-cols-3 gap-2"
-                >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="none" id="sort-none" />
-                    <Label htmlFor="sort-none" className="cursor-pointer">
-                      No sorting
-                    </Label>
-                  </div>
-
-                  {sortByOptions.map((sortByOption) => (
-                    <div
-                      key={sortByOption}
-                      className="flex items-center space-x-2"
-                    >
-                      <RadioGroupItem
-                        value={sortByOption}
-                        id={`sort-${sortByOption}`}
-                      />
-                      <Label
-                        htmlFor={`sort-${sortByOption}`}
-                        className="cursor-pointer"
-                      >
-                        <span>
-                          Sort by{" "}
-                          <span className="capitalize">{sortByOption}</span>
-                        </span>
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-
-              <div className="space-y-2">
-                <Label className="font-bold">Sorting direction</Label>
-                <RadioGroup
-                  value={sort ?? "desc"}
-                  onValueChange={(value) => {
-                    navigate({
-                      page: 1,
-                      sort: value as "asc" | "desc",
-                    });
-                  }}
-                  className="grid grid-cols-2 gap-2"
-                >
-                  {sortOptions.map((sortOption) => (
-                    <div
-                      key={sortOption}
-                      className="flex items-center space-x-2"
-                    >
-                      <RadioGroupItem
-                        value={sortOption}
-                        id={`sort-${sortOption}`}
-                      />
-                      <Label
-                        htmlFor={`sort-${sortOption}`}
-                        className="cursor-pointer"
-                      >
-                        <span className="capitalize">
-                          {sortOption === "asc" ? "ascending" : "descending"}
-                        </span>
-                      </Label>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </div>
-            </div>
-
-            <Button
-              variant="outline"
-              className="w-full cursor-pointer"
-              onClick={() => {
+    <div className="flex gap-2">
+      <Popover open={isOpen} onOpenChange={setIsOpen}>
+        <PopoverTrigger className="cursor-pointer" asChild>
+          <Button variant="outline">
+            <ListFilterIcon className="w-4 h-4" />
+            <span>Filters</span>
+            {authorId ? (
+              <Badge
+                variant="secondary"
+                className="h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]"
+              >
+                authorId: {authorId}
+              </Badge>
+            ) : null}
+            {sortBy ? (
+              <Badge
+                variant="secondary"
+                className="h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]"
+              >
+                {sortBy}
+              </Badge>
+            ) : null}
+            {sort ? (
+              <Badge
+                variant="secondary"
+                className="h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]"
+              >
+                {sort}
+              </Badge>
+            ) : null}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent
+          align="start"
+          className="flex flex-col gap-3.5 p-4 sm:min-w-[380px]"
+        >
+          <div className="flex gap-2 flex-1">
+            <Select
+              onValueChange={(value) => {
                 navigate({
                   page: 1,
-                  limit: 10,
-                  authorId: undefined,
-                  sortBy: undefined,
-                  sort: undefined,
+                  sortBy: value as "views" | "shares",
+                  sort: sort ?? "desc",
                 });
               }}
+              value={sortBy || ""}
             >
-              Reset Filters
-            </Button>
-          </CardContent>
-        </Card>
-      </CollapsibleContent>
-    </Collapsible>
+              <div className="flex flex-col gap-2 flex-1">
+                <Label>Sort by</Label>
+                <SelectTrigger className="w-full max-w-48">
+                  <SelectValue
+                    placeholder="Sort by"
+                  />
+                </SelectTrigger>
+              </div>
+              <SelectContent>
+                {sortByOptions.map((sortByOption) => (
+                  <SelectItem
+                    key={sortByOption}
+                    value={sortByOption}
+                  >
+                    <span className="capitalize">{sortByOption}</span>
+                  </SelectItem>
+                ))}
+                <SelectSeparator />
+                <Button
+                  className="w-full px-2"
+                  variant="secondary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({
+                      page: 1,
+                      sortBy: undefined,
+                      sort: undefined,
+                      authorId: undefined,
+                    });
+                  }}
+                >
+                  Clear
+                </Button>
+              </SelectContent>
+            </Select>
+            <Select
+              disabled={!sortBy}
+              onValueChange={(value) => {
+                navigate({
+                  page: 1,
+                  sort: value as "asc" | "desc",
+                });
+              }}
+              value={sort || ""}
+            >
+              <div className="flex flex-col gap-2 flex-1">
+                <Label>Sort direction</Label>
+                <SelectTrigger className="w-full max-w-48">
+                  <SelectValue placeholder="Sort direction" />
+                </SelectTrigger>
+              </div>
+              <SelectContent>
+                {sortOptions.map((sortOption) => (
+                  <SelectItem
+                    key={sortOption}
+                    value={sortOption}
+                    className="capitalize"
+                  >
+                    {sortOption === "asc" ? "Ascending" : "Descending"}
+                  </SelectItem>
+                ))}
+                <Button
+                  className="w-full px-2"
+                  variant="secondary"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate({
+                      page: 1,
+                      sort: sortBy ? "desc" : undefined,
+                    });
+                  }}
+                >
+                  Clear
+                </Button>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="flex flex-col gap-2 flex-1">
+            <Label>Filter by Author</Label>
+            <Suspense fallback={<Spinner size="small" />}>
+              <AuthorFilter />
+            </Suspense>
+          </div>
+        </PopoverContent>
+      </Popover>
+      {sortBy || sort || authorId ? (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => {
+            navigate({
+              page: 1,
+              sortBy: undefined,
+              sort: undefined,
+              authorId: undefined,
+            });
+          }}
+        >
+          <XIcon className="w-4 h-4" />
+        </Button>
+      ) : null}
+    </div>
   );
 }
