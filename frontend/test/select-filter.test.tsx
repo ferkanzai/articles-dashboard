@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import userEvent from "@testing-library/user-event";
 
 import SelectFilter from "../src/components/select-filter";
@@ -57,6 +57,12 @@ describe("SelectFilter", () => {
     disabled: false,
   };
 
+  let user: ReturnType<typeof userEvent.setup>;
+
+  beforeEach(() => {
+    user = userEvent.setup();
+  });
+
   it("renders the label", () => {
     render(<SelectFilter {...defaultProps} />);
     expect(screen.getByLabelText("Sort By")).toBeInTheDocument();
@@ -77,7 +83,7 @@ describe("SelectFilter", () => {
   it("renders select options when trigger is clicked", async () => {
     render(<SelectFilter {...defaultProps} />);
     const trigger = screen.getByRole("combobox");
-    userEvent.click(trigger);
+    await user.click(trigger);
     expect(await screen.findByText("views")).toBeVisible();
     expect(await screen.findByText("shares")).toBeVisible();
   });
@@ -85,8 +91,7 @@ describe("SelectFilter", () => {
   it("calls onValueChange when an option is selected", async () => {
     render(<SelectFilter {...defaultProps} />);
     const trigger = screen.getByRole("combobox");
-    userEvent.click(trigger);
-
+    await user.click(trigger);
     const option = await screen.findByTestId("select-option-shares");
     fireEvent.click(option);
 
@@ -97,7 +102,7 @@ describe("SelectFilter", () => {
   it("renders the clear filter button within the dropdown", async () => {
     render(<SelectFilter {...defaultProps} />);
     const trigger = screen.getByRole("combobox");
-    userEvent.click(trigger);
+    await user.click(trigger);
 
     expect(await screen.findByText("Clear")).toBeVisible();
   });
@@ -105,7 +110,6 @@ describe("SelectFilter", () => {
   it("disables the select when disabled prop is true", () => {
     render(<SelectFilter {...defaultProps} disabled={true} />);
     const trigger = screen.getByRole("combobox");
-    userEvent.click(trigger);
     expect(trigger).toBeDisabled();
   });
 });
