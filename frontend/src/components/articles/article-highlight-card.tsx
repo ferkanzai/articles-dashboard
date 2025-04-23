@@ -165,6 +165,7 @@ export function ArticleHighlightCard({ type, article }: SpotlightCardProps) {
         setOpen={setOpen}
         setSummary={setSummary}
         summary={summary}
+        variant={type === "mostViewed" ? "mostViews" : "mostShared"}
       />
     </>
   );
