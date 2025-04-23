@@ -1,11 +1,12 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import type { AuthorsResponse } from "@/api/types";
 import { api } from "@/api";
 import { Combobox } from "@/components/ui/combobox";
+import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 
 export function AuthorFilter() {
-  const navigate = useNavigate({ from: "/" });
+  const { navigate } = useUpdateNavigate();
   const { authorId } = useSearch({ from: "/" });
   const { data: authorsResponse } = useSuspenseQuery({
     queryKey: ["authors"],
@@ -25,13 +26,7 @@ export function AuthorFilter() {
       values={authorsValues}
       value={authorId?.toString() ?? ""}
       setValue={(value) => {
-        navigate({
-          search: {
-            authorId: value ? parseInt(value) : undefined,
-          },
-          replace: true,
-          resetScroll: false,
-        });
+        navigate({ authorId: value ? parseInt(value) : undefined });
       }}
       placeholder="Select author"
       emptyMessage="No author found"

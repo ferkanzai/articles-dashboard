@@ -1,13 +1,14 @@
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { DeleteIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 
 export default function ArticlesSearch() {
   const { search } = useSearch({ from: "/" });
-  const navigate = useNavigate({ from: "/" });
+  const { navigate } = useUpdateNavigate();
   const [searchValue, setSearchValue] = useState(search);
   const debouncedSearch = useDebounce(searchValue, 500);
 
@@ -21,25 +22,11 @@ export default function ArticlesSearch() {
 
   const handleDelete = () => {
     setSearchValue(undefined);
-    navigate({
-      search: (old) => ({
-        ...old,
-        search: undefined,
-      }),
-      replace: true,
-      resetScroll: false,
-    });
+    navigate({ search: undefined });
   };
 
   useEffect(() => {
-    navigate({
-      search: (old) => ({
-        ...old,
-        search: debouncedSearch,
-      }),
-      replace: true,
-      resetScroll: false,
-    });
+    navigate({ search: debouncedSearch });
   }, [debouncedSearch]);
 
   return (

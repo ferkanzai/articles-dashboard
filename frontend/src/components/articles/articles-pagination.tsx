@@ -1,6 +1,6 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
 
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import {
   Pagination,
   PaginationContent,
@@ -10,11 +10,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 import { cn } from "@/lib/utils";
 
 export default function ArticlesPagination({ pathname, lastPage }: { pathname: "/", lastPage: number }) {
   const { page } = useSearch({ from: pathname });
-  const navigate = useNavigate({ from: pathname });
+  const { navigate } = useUpdateNavigate();
 
   const pageParam = page ?? 1;
   const isFirstPage = pageParam === 1;
@@ -41,13 +42,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
             isActive={!isFirstPage}
             onClick={() => {
               if (!isFirstPage) {
-                navigate({
-                  search: {
-                    page: 1,
-                  },
-                  replace: true,
-                  resetScroll: false,
-                });
+                navigate({ page: 1 });
               }
             }}
             size="default"
@@ -64,13 +59,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
             isActive={!isFirstPage}
             onClick={() => {
               if (!isFirstPage) {
-                navigate({
-                  search: {
-                    page: pageParam - 1,
-                  },
-                  replace: true,
-                  resetScroll: false,
-                });
+                navigate({ page: pageParam - 1 });
               }
             }}
           />
@@ -89,13 +78,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                   ? "bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
                   : "",
               )}
-              onClick={() => navigate({
-                search: {
-                  page: pageToShow,
-                },
-                replace: true,
-                resetScroll: false,
-              })}
+              onClick={() => navigate({ page: pageToShow })}
             >
               {pageToShow}
             </PaginationLink>
@@ -115,13 +98,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
             isActive={!isLastPage}
             onClick={() => {
               if (!isLastPage) {
-                navigate({
-                  search: {
-                    page: pageParam + 1,
-                  },
-                  replace: true,
-                  resetScroll: false,
-                });
+                navigate({ page: pageParam + 1 });
               }
             }}
           />
@@ -135,13 +112,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
             isActive={!isLastPage}
             onClick={() => {
               if (!isLastPage) {
-                navigate({
-                  search: {
-                    page: lastPage,
-                  },
-                  replace: true,
-                  resetScroll: false,
-                });
+                navigate({ page: lastPage });
               }
             }}
             size="default"

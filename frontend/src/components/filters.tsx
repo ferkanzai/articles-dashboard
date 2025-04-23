@@ -1,4 +1,4 @@
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { ChevronsUpDownIcon, FilterIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import { AuthorFilter } from "./author-filter";
@@ -10,19 +10,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 
 export default function FilterSidebar() {
   const { limit, sortBy, sort } = useSearch({ from: "/" });
-  const navigate = useNavigate({ from: "/" });
+  const { navigate } = useUpdateNavigate();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -53,14 +54,7 @@ export default function FilterSidebar() {
                 <Label className="font-bold">Articles per page</Label>
                 <Select
                   onValueChange={(value) =>
-                    navigate({
-                      search: (old) => ({
-                        ...old,
-                        limit: parseInt(value),
-                      }),
-                      replace: true,
-                      resetScroll: false,
-                    })
+                    navigate({ limit: parseInt(value) })
                   }
                   value={limit ? limit.toString() : "10"}
                 >
@@ -89,21 +83,12 @@ export default function FilterSidebar() {
                   value={sortBy ? sortBy : "none"}
                   onValueChange={(value) => {
                     if (value === "none") {
-                      navigate({
-                        search: { sortBy: undefined, sort: "desc", page: 1 },
-                        replace: true,
-                        resetScroll: false,
-                      });
+                      navigate({ sortBy: undefined, sort: "desc", page: 1 });
                     } else {
                       navigate({
-                        search: (old) => ({
-                          ...old,
-                          page: 1,
-                          sortBy: value as "views" | "shares",
-                          sort: "desc",
-                        }),
-                        replace: true,
-                        resetScroll: false,
+                        sortBy: value as "views" | "shares",
+                        page: 1,
+                        sort: "desc",
                       });
                     }
                   }}
@@ -145,13 +130,8 @@ export default function FilterSidebar() {
                   value={sort ?? "desc"}
                   onValueChange={(value) => {
                     navigate({
-                      search: (old) => ({
-                        ...old,
-                        page: 1,
-                        sort: value as "asc" | "desc",
-                      }),
-                      replace: true,
-                      resetScroll: false,
+                      page: 1,
+                      sort: value as "asc" | "desc",
                     });
                   }}
                   className="grid grid-cols-2 gap-2"
@@ -184,15 +164,11 @@ export default function FilterSidebar() {
               className="w-full cursor-pointer"
               onClick={() => {
                 navigate({
-                  search: {
-                    page: 1,
-                    limit: 10,
-                    authorId: undefined,
-                    sortBy: undefined,
-                    sort: undefined,
-                  },
-                  replace: true,
-                  resetScroll: false,
+                  page: 1,
+                  limit: 10,
+                  authorId: undefined,
+                  sortBy: undefined,
+                  sort: undefined,
                 });
               }}
             >

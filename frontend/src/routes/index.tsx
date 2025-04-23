@@ -1,8 +1,7 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   createFileRoute,
-  retainSearchParams,
-  useNavigate
+  retainSearchParams
 } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
@@ -11,6 +10,7 @@ import ArticleCard from "@/components/articles/article-card";
 import ArticlesPagination from "@/components/articles/articles-pagination";
 import ArticlesSearch from "@/components/articles/articles-search";
 import { Spinner } from "@/components/spinner";
+import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 
 export const Route = createFileRoute("/")({
   validateSearch: z.object({
@@ -35,7 +35,7 @@ export const Route = createFileRoute("/")({
 
 export default function ArticlesList() {
   const { page } = Route.useSearch();
-  const navigate = useNavigate({ from: Route.fullPath });
+  const { navigate } = useUpdateNavigate();
   const { data } = useSuspenseQuery(articlesQueryOptions(Route.useSearch()));
 
   const responseArticles = data.data;
@@ -43,12 +43,7 @@ export default function ArticlesList() {
 
   useEffect(() => {
     if (page !== 1 && (page ?? 1) > lastPage) {
-      navigate({
-        search: {
-          page: 1,
-        },
-        resetScroll: false,
-      });
+      navigate({ page: 1 });
     }
   }, [page, lastPage]);
 
