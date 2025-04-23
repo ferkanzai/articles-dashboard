@@ -25,17 +25,19 @@ export default function Filters() {
   const sortOptions: Array<"asc" | "desc"> = ["desc", "asc"];
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-2 sm:items-center overflow-clip mx-2 flex-col sm:flex-row">
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger className="cursor-pointer" asChild>
-          <Button variant="outline">
+          <Button variant="outline" className="justify-start">
             <ListFilterIcon className="w-4 h-4" />
             <span>Filters</span>
-            <FilterBadge label={`page: ${page}`} value={page} />
-            <FilterBadge label={`limit: ${limit}`} value={limit} />
-            <FilterBadge label={`authorId: ${authorId}`} value={authorId} />
-            <FilterBadge label={`${sortBy}`} value={sortBy} />
-            <FilterBadge label={`${sort}`} value={sort} />
+            <div className="flex gap-1 items-center">
+              <FilterBadge label={`limit: ${limit}`} value={limit} />
+              <FilterBadge label={`authorId: ${authorId}`} value={authorId} />
+              <FilterBadge label={`${sortBy}`} value={sortBy} />
+              <FilterBadge label={`${sort}`} value={sort} />
+              <FilterBadge label={`page: ${page}`} value={page} />
+            </div>
           </Button>
         </PopoverTrigger>
         <PopoverContent
