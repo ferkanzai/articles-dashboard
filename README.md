@@ -75,7 +75,7 @@ pnpm dev
 
 ### Bonus 🤩
 
-The app is deployed and working [here]((https://edelman.fercarmona.dev/)) 🚀.
+The app is deployed and working [here](https://edelman.fercarmona.dev/) 🚀.
 
 Also, as the API is built using OpenAPI, there's a web to check the schema properly so you can start working and testing right away. Check it out [here](https://edelman-api.fercarmona.dev/api/reference)
 
