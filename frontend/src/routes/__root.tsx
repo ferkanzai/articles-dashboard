@@ -12,7 +12,7 @@ interface MyRouterContext {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: () => (
     <>
-      <div className="container mx-auto py-6 px-4 space-y-6">
+      <div className="container mx-auto py-6 px-4 space-y-6 max-w-7xl">
         <h1 className="text-3xl font-bold">Article Dashboard</h1>
 
         <div className="flex flex-col gap-4">

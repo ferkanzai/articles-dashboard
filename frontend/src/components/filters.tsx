@@ -48,7 +48,7 @@ export default function FilterSidebar() {
             <CardTitle>Filters</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="gap-4 flex flex-col md:flex-row justify-between">
+            <div className="gap-4 flex flex-col lg:flex-row justify-between">
               <div className="space-y-2">
                 <Label className="font-bold">Articles per page</Label>
                 <Select

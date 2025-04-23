@@ -1,7 +1,7 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
+import SpotlightCard from "./spotlight-card";
 import type { Article } from "@/api/types";
-import ArticleCard from "@/components/articles/article-card";
 import { Spinner } from "@/components/spinner";
 import { api } from "@/api";
 
@@ -44,15 +44,9 @@ export default function ArticleHighlights() {
   const { mostShares, mostViews } = highlightsArticles;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <h3 className="text-lg font-medium mb-2">Most Viewed</h3>
-        <ArticleCard article={mostViews} highlight />
-      </div>
-      <div>
-        <h3 className="text-lg font-medium mb-2">Most Shared</h3>
-        <ArticleCard article={mostShares} highlight />
-      </div>
+    <div className="flex flex-wrap justify-evenly gap-4 lg:gap-0">
+        <SpotlightCard article={mostViews} type="mostViewed" />
+        <SpotlightCard article={mostShares} type="mostShared" />
     </div>
   );
 }
