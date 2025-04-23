@@ -94,63 +94,68 @@ export function SpotlightCard({ type, article }: SpotlightCardProps) {
         >
           {config.label}
         </div>
-        <div className="flex gap-3 items-center mb-3 mt-6">
-          <span
-            className={cn(
-              "inline-flex items-center justify-center rounded-full p-2",
-              config.iconBg,
-              "shadow-md",
-              "animate-scale-in",
-            )}
-          >
-            <Icon size={26} className={config.iconColor} />
-          </span>
-          <span
-            className={cn(
-              "font-bold text-2xl tracking-tight drop-shadow-sm",
-              config.metricColor,
-              "animate-fade-in",
-            )}
-          >
-            {type === "mostViewed" ? article.views : article.shares}
-          </span>
-        </div>
-        <div>
-          <div className="text-xl font-bold mb-1 text-gray-900">
-            {article.title}
-          </div>
-          <div className="text-sm text-gray-700 mb-2">
-            By {article.author.name}
-          </div>
-          <div className="text-gray-600 text-[15px] mb-5 line-clamp-3">
-            {article.content}
+        <div className="absolute top-4 right-4 md:top-6 md:right-6">
+          <div className="flex gap-3 items-center">
+            <span
+              className={cn(
+                "inline-flex items-center justify-center rounded-full p-2",
+                config.iconBg,
+                "shadow-md",
+                "animate-scale-in",
+              )}
+            >
+              <Icon size={26} className={config.iconColor} />
+            </span>
+            <span
+              className={cn(
+                "font-bold text-2xl tracking-tight drop-shadow-sm",
+                config.metricColor,
+                "animate-fade-in",
+              )}
+            >
+              {type === "mostViewed" ? article.views : article.shares}
+            </span>
           </div>
         </div>
-        <Button
-          className={cn(
-            "w-full py-2 rounded-lg mt-1 font-semibold cursor-pointer",
-            "backdrop-blur-lg bg-white/60 hover:bg-white/80 transition",
-            "border border-white/30 text-gray-900 shadow-sm",
-            "focus:outline-none focus:ring-2 focus:ring-blue-400",
-            "group-hover:shadow-lg group-hover:-translate-y-0.5",
-          )}
-          onClick={handleSummarize}
-        >
-          <TextReveal
-            loading={summarizeArticle.isPending}
-            initialText="Summarize"
-            loadingText="Generating..."
-            textClassName={cn(
-              type === "mostViewed" ? "text-sky-600" : "text-fuchsia-600",
+        <div className="flex flex-col gap-4 items-center">
+          <div className="mt-12 flex flex-col gap-2">
+            <div className="text-xl font-bold text-gray-900">
+              {article.title}
+            </div>
+            <div className="text-sm text-gray-700">
+              By {article.author.name}
+            </div>
+            <div className="text-gray-600 text-[15px] line-clamp-3">
+              {article.content}
+            </div>
+          </div>
+          <Button
+            className={cn(
+              "w-90 py-2 rounded-lg font-semibold cursor-pointer",
+              "backdrop-blur-lg bg-white/60 hover:bg-white/80 transition",
+              "border shadow-sm text-gray-900",
+              type === "mostViewed" ? "border-sky-400" : "border-fuchsia-400",
+              "focus:outline-none focus:ring-2 focus:ring-blue-400",
+              "group-hover:shadow-lg group-hover:-translate-y-0.5",
             )}
-            loadingBaseTextClassName={cn(
-              type === "mostViewed" ? "text-sky-400" : "text-fuchsia-400",
-            )}
-            loadingRevealTextClassName={cn(
-              type === "mostViewed" ? "text-sky-800" : "text-fuchsia-800",
-            )}
-          />
-        </Button>
+            onClick={handleSummarize}
+          >
+            <TextReveal
+              loading={summarizeArticle.isPending}
+              initialText="Summarize"
+              loadingText="Generating..."
+              textClassName={cn(
+                type === "mostViewed" ? "text-sky-600" : "text-fuchsia-600",
+              )}
+              loadingBaseTextClassName={cn(
+                type === "mostViewed" ? "text-sky-400" : "text-fuchsia-400",
+              )}
+              loadingRevealTextClassName={cn(
+                type === "mostViewed" ? "text-sky-800" : "text-fuchsia-800",
+              )}
+            />
+          </Button>
+        </div>
         <div
           className={cn(
             "pointer-events-none absolute inset-0 rounded-2xl opacity-20 group-hover:opacity-30 transition group-hover:animate-pulse",
