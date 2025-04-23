@@ -37,7 +37,13 @@ export default function ArticlesSearch() {
         autoFocus
         value={searchValue ?? ""}
       />
-      <Button variant="outline" size="icon" className="cursor-pointer" onClick={handleDelete}>
+      <Button
+        variant="outline"
+        size="icon"
+        className="disabled:cursor-not-allowed cursor-pointer"
+        onClick={handleDelete}
+        disabled={!searchValue}
+      >
         <DeleteIcon />
       </Button>
     </div>

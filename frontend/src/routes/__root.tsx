@@ -2,7 +2,7 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import TanstackQueryLayout from "../integrations/tanstack-query/layout";
 import type { QueryClient } from "@tanstack/react-query";
-import FilterSidebar from "@/components/filters";
+import Filters from "@/components/filters";
 import ArticleHighlights from "@/components/articles/article-highlights";
 
 interface MyRouterContext {
@@ -16,7 +16,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         <h1 className="text-3xl font-bold">Article Dashboard</h1>
 
         <div className="flex flex-col gap-4">
-            <FilterSidebar />
+            <Filters />
 
           <div className="">
             <ArticleHighlights />

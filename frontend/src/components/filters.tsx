@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useUpdateNavigate } from "@/hooks/useUpdateNavigate";
 
-export default function FilterSidebar() {
+export default function Filters() {
   const { limit, sortBy, sort } = useSearch({ from: "/" });
   const { navigate } = useUpdateNavigate();
 
@@ -86,8 +86,8 @@ export default function FilterSidebar() {
                       navigate({ sortBy: undefined, sort: "desc", page: 1 });
                     } else {
                       navigate({
-                        sortBy: value as "views" | "shares",
                         page: 1,
+                        sortBy: value as "views" | "shares",
                         sort: "desc",
                       });
                     }

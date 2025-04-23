@@ -1,8 +1,5 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  retainSearchParams
-} from "@tanstack/react-router";
+import { createFileRoute, retainSearchParams } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { z } from "zod";
 import { articlesQueryOptions } from "@/api";
@@ -27,10 +24,21 @@ export const Route = createFileRoute("/")({
   },
   search: {
     middlewares: [
-      retainSearchParams(["authorId", "limit", "page", "sort", "sortBy", "search"]),
+      retainSearchParams([
+        "authorId",
+        "limit",
+        "page",
+        "sort",
+        "sortBy",
+        "search",
+      ]),
     ],
   },
-  pendingComponent: () => <div className="min-h-[850px] md:min-h-[350px] flex justify-center items-center"><Spinner /></div>,
+  pendingComponent: () => (
+    <div className="min-h-[850px] md:min-h-[350px] flex justify-center items-center">
+      <Spinner />
+    </div>
+  ),
 });
 
 export default function ArticlesList() {
@@ -48,17 +56,19 @@ export default function ArticlesList() {
   }, [page, lastPage]);
 
   return (
-    <>
+    <div id="articles-list">
       <h2 className="text-2xl font-semibold mb-4">All Articles ({total})</h2>
       <div className="space-y-6">
-        <ArticlesPagination pathname={Route.fullPath} lastPage={lastPage} />
-        <ArticlesSearch />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="flex items-center flex-col gap-4 sticky top-0 bg-white z-10 p-4">
+          <ArticlesPagination pathname={Route.fullPath} lastPage={lastPage} />
+          <ArticlesSearch />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-2">
           {articles.map((article) => (
             <ArticleCard article={article} key={article.id} />
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }
