@@ -2,22 +2,16 @@ import { useMutation } from "@tanstack/react-query";
 import { Eye, Share } from "lucide-react";
 import { useEffect, useState } from "react";
 import { TextReveal } from "../text-reveal";
+import ArticleSummary from "./article-summary";
 import type { Article } from "@/api/types";
-import { api } from "@/api";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { api } from "@/api";
 
 interface ArticleCardProps {
   article: Article;
@@ -95,26 +89,13 @@ export default function ArticleCard({ article }: ArticleCardProps) {
         </CardFooter>
       </Card>
 
-      <Dialog
+      <ArticleSummary
+        article={article}
         open={open}
-        onOpenChange={(openValue) => {
-          setOpen(openValue);
-          if (!openValue) {
-            setSummary(null);
-          }
-        }}
-      >
-        <DialogContent className="md:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="mb-2">{article.title}</DialogTitle>
-            <DialogDescription>By {article.author.name}</DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">
-            <h4 className="font-medium mb-2">Summary</h4>
-            <p className="text-sm text-muted-foreground">{summary}</p>
-          </div>
-        </DialogContent>
-      </Dialog>
+        setOpen={setOpen}
+        setSummary={setSummary}
+        summary={summary}
+      />
     </>
   );
 }

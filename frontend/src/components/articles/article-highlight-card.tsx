@@ -1,18 +1,12 @@
-import { Eye, Share2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { Eye, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import ArticleSummary from "./article-summary";
 import type { Article } from "@/api/types";
+import { api } from "@/api";
 import { TextReveal } from "@/components/text-reveal";
 import { Button } from "@/components/ui/button";
-import { api } from "@/api";
 import { cn } from "@/lib/utils";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 
 type SpotlightType = "mostViewed" | "mostShared";
 
@@ -44,7 +38,7 @@ const typeConfig = {
   },
 };
 
-export function SpotlightCard({ type, article }: SpotlightCardProps) {
+export function ArticleHighlightCard({ type, article }: SpotlightCardProps) {
   const config = typeConfig[type];
   const Icon = config.icon;
 
@@ -165,28 +159,15 @@ export function SpotlightCard({ type, article }: SpotlightCardProps) {
           )}
         />
       </div>
-      <Dialog
+      <ArticleSummary
+        article={article}
         open={open}
-        onOpenChange={(openValue) => {
-          setOpen(openValue);
-          if (!openValue) {
-            setSummary(null);
-          }
-        }}
-      >
-        <DialogContent className="md:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="mb-2">{article.title}</DialogTitle>
-            <DialogDescription>By {article.author.name}</DialogDescription>
-          </DialogHeader>
-          <div className="mt-4">
-            <h4 className="font-medium mb-2">Summary</h4>
-            <p className="text-sm text-muted-foreground">{summary}</p>
-          </div>
-        </DialogContent>
-      </Dialog>
+        setOpen={setOpen}
+        setSummary={setSummary}
+        summary={summary}
+      />
     </>
   );
 }
 
-export default SpotlightCard;
+export default ArticleHighlightCard;
