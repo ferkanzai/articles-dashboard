@@ -125,7 +125,7 @@ export function ArticleHighlightCard({ type, article }: SpotlightCardProps) {
           </div>
           <Button
             className={cn(
-              "w-90 py-2 rounded-lg font-semibold cursor-pointer",
+              "w-full max-w-90 py-2 rounded-lg font-semibold cursor-pointer",
               "backdrop-blur-lg bg-white/60 hover:bg-white/80 transition",
               "border shadow-sm text-gray-900",
               type === "mostViewed" ? "border-sky-400" : "border-fuchsia-400",
