@@ -1,4 +1,4 @@
-import { BookOpenText } from "lucide-react";
+import { BookOpenText, Bookmark } from "lucide-react";
 import {  cva } from "class-variance-authority";
 import type {VariantProps} from "class-variance-authority";
 import type { Article } from "@/api/types";
@@ -55,7 +55,7 @@ export default function ArticleSummary({
           <div className={cn(gradientColorsVariants({ variant }))} />
           <div className="flex flex-row items-center gap-3 pt-7 pb-1 px-7">
             <div className="flex items-center justify-center rounded-full bg-purple-200/70 shadow-sm p-2">
-              <BookOpenText size={28} className="text-purple-700" />
+              <Bookmark size={24} className="text-purple-700" />
             </div>
             <div className="flex-1">
               <DialogTitle className="text-[1.15rem] font-extrabold text-gray-900 leading-tight">
