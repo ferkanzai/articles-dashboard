@@ -2,6 +2,8 @@ import { Eye, Share2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import type { Article } from "@/api/types";
+import { TextReveal } from "@/components/text-reveal";
+import { Button } from "@/components/ui/button";
 import { api } from "@/api";
 import { cn } from "@/lib/utils";
 import {
@@ -124,7 +126,7 @@ export function SpotlightCard({ type, article }: SpotlightCardProps) {
             {article.content}
           </div>
         </div>
-        <button
+        <Button
           className={cn(
             "w-full py-2 rounded-lg mt-1 font-semibold cursor-pointer",
             "backdrop-blur-lg bg-white/60 hover:bg-white/80 transition",
@@ -134,8 +136,21 @@ export function SpotlightCard({ type, article }: SpotlightCardProps) {
           )}
           onClick={handleSummarize}
         >
-          {summarizeArticle.isPending ? "Generating..." : "Summarize"}
-        </button>
+          <TextReveal
+            loading={summarizeArticle.isPending}
+            initialText="Summarize"
+            loadingText="Generating..."
+            textClassName={cn(
+              type === "mostViewed" ? "text-sky-600" : "text-fuchsia-600",
+            )}
+            loadingBaseTextClassName={cn(
+              type === "mostViewed" ? "text-sky-400" : "text-fuchsia-400",
+            )}
+            loadingRevealTextClassName={cn(
+              type === "mostViewed" ? "text-sky-800" : "text-fuchsia-800",
+            )}
+          />
+        </Button>
         <div
           className={cn(
             "pointer-events-none absolute inset-0 rounded-2xl opacity-20 group-hover:opacity-30 transition group-hover:animate-pulse",

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Eye, Share2 } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { TextReveal } from "../text-reveal";
 import type { Article } from "@/api/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,7 +35,10 @@ export default function ArticleCard({
 
   const summarizeArticle = useMutation({
     mutationFn: async ({ id }: { id: string }) => {
-      const response = await api.post<{ data: { summary: string }; success: boolean }>(`/articles/${id}/summarize`);
+      const response = await api.post<{
+        data: { summary: string };
+        success: boolean;
+      }>(`/articles/${id}/summarize`);
       return response.data;
     },
     onSuccess: (data) => {
@@ -81,17 +85,26 @@ export default function ArticleCard({
             variant="outline"
             className="w-full cursor-pointer"
           >
-            {summarizeArticle.isPending ? "Generating..." : "Summarize"}
+            <TextReveal
+              loading={summarizeArticle.isPending}
+              initialText="Summarize"
+              loadingText="Generating..."
+              loadingBaseTextClassName="text-gray-400"
+              loadingRevealTextClassName="text-gray-800"
+            />
           </Button>
         </CardFooter>
       </Card>
 
-      <Dialog open={open} onOpenChange={(openValue) => {
-        setOpen(openValue);
-        if (!openValue) {
-          setSummary(null);
-        }
-      }}>
+      <Dialog
+        open={open}
+        onOpenChange={(openValue) => {
+          setOpen(openValue);
+          if (!openValue) {
+            setSummary(null);
+          }
+        }}
+      >
         <DialogContent className="md:max-w-md">
           <DialogHeader>
             <DialogTitle className="mb-2">{article.title}</DialogTitle>
