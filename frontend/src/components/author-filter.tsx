@@ -25,7 +25,6 @@ export function AuthorFilter() {
       values={authorsValues}
       value={authorId?.toString() ?? ""}
       setValue={(value) => {
-        console.log(value);
         navigate({
           search: {
             authorId: value ? parseInt(value) : undefined,

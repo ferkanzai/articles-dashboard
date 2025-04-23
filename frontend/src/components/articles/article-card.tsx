@@ -38,13 +38,11 @@ export default function ArticleCard({
       return response.data;
     },
     onSuccess: (data) => {
-      console.log("Success", data);
       setSummary(data.data.summary);
     },
   });
 
   const handleSummarize = () => {
-    console.log("Summarizing article", article.id);
     summarizeArticle.mutate({ id: article.id });
   };
 
@@ -94,7 +92,7 @@ export default function ArticleCard({
           setSummary(null);
         }
       }}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="md:max-w-md">
           <DialogHeader>
             <DialogTitle className="mb-2">{article.title}</DialogTitle>
             <DialogDescription>By {article.author.name}</DialogDescription>
