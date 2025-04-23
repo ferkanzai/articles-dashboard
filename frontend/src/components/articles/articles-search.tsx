@@ -27,6 +27,7 @@ export default function ArticlesSearch() {
         search: undefined,
       }),
       replace: true,
+      resetScroll: false,
     });
   };
 
@@ -37,6 +38,7 @@ export default function ArticlesSearch() {
         search: debouncedSearch,
       }),
       replace: true,
+      resetScroll: false,
     });
   }, [debouncedSearch]);
 

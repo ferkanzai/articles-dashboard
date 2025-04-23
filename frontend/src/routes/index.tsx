@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
       retainSearchParams(["authorId", "limit", "page", "sort", "sortBy", "search"]),
     ],
   },
-  pendingComponent: () => <div className="min-h-16 flex justify-center items-center"><Spinner /></div>,
+  pendingComponent: () => <div className="min-h-[850px] md:min-h-[350px] flex justify-center items-center"><Spinner /></div>,
 });
 
 export default function ArticlesList() {
@@ -47,6 +47,7 @@ export default function ArticlesList() {
         search: {
           page: 1,
         },
+        resetScroll: false,
       });
     }
   }, [page, lastPage]);

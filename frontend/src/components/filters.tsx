@@ -59,6 +59,7 @@ export default function FilterSidebar() {
                         limit: parseInt(value),
                       }),
                       replace: true,
+                      resetScroll: false,
                     })
                   }
                   value={limit ? limit.toString() : "10"}
@@ -91,6 +92,7 @@ export default function FilterSidebar() {
                       navigate({
                         search: { sortBy: undefined, sort: "desc", page: 1 },
                         replace: true,
+                        resetScroll: false,
                       });
                     } else {
                       navigate({
@@ -101,6 +103,7 @@ export default function FilterSidebar() {
                           sort: "desc",
                         }),
                         replace: true,
+                        resetScroll: false,
                       });
                     }
                   }}
@@ -148,6 +151,7 @@ export default function FilterSidebar() {
                         sort: value as "asc" | "desc",
                       }),
                       replace: true,
+                      resetScroll: false,
                     });
                   }}
                   className="grid grid-cols-2 gap-2"
@@ -188,6 +192,7 @@ export default function FilterSidebar() {
                     sort: undefined,
                   },
                   replace: true,
+                  resetScroll: false,
                 });
               }}
             >

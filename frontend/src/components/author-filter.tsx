@@ -30,6 +30,7 @@ export function AuthorFilter() {
             authorId: value ? parseInt(value) : undefined,
           },
           replace: true,
+          resetScroll: false,
         });
       }}
       placeholder="Select author"

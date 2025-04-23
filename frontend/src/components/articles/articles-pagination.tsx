@@ -46,6 +46,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                     page: 1,
                   },
                   replace: true,
+                  resetScroll: false,
                 });
               }
             }}
@@ -68,6 +69,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                     page: pageParam - 1,
                   },
                   replace: true,
+                  resetScroll: false,
                 });
               }
             }}
@@ -92,6 +94,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                   page: pageToShow,
                 },
                 replace: true,
+                resetScroll: false,
               })}
             >
               {pageToShow}
@@ -117,6 +120,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                     page: pageParam + 1,
                   },
                   replace: true,
+                  resetScroll: false,
                 });
               }
             }}
@@ -136,6 +140,7 @@ export default function ArticlesPagination({ pathname, lastPage }: { pathname: "
                     page: lastPage,
                   },
                   replace: true,
+                  resetScroll: false,
                 });
               }
             }}
