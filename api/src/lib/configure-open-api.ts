@@ -37,7 +37,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
         title: "Edelman test API",
         description: "Edelman test API Documentation",
       },
-      hideDownloadButton: true,
+      hideDownloadButton: false,
     }),
   );
 }

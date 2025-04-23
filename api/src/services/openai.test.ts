@@ -79,13 +79,13 @@ describe("generateArticleSummary", () => {
       expect(mockLogger.error).toHaveBeenCalledTimes(1);
       expect(mockLogger.error).toHaveBeenCalledWith({ msg: "OpenAI client not found" });
       expect(mockLogger.info).not.toHaveBeenCalled();
-      expect(mockOpenAICreate).not.toHaveBeenCalled(); // Ensure OpenAI API was not called
+      expect(mockOpenAICreate).not.toHaveBeenCalled();
     });
 
     it("should return article content if summary is null and log an error", async () => {
       const result = await generateArticleSummary(mockContext, mockArticleWithoutSummary);
 
-      expect(result).toBe(mockArticleWithoutSummary.content); // Fallback to content
+      expect(result).toBe(mockArticleWithoutSummary.content);
       expect(mockLogger.error).toHaveBeenCalledTimes(1);
       expect(mockLogger.error).toHaveBeenCalledWith({ msg: "OpenAI client not found" });
       expect(mockLogger.info).not.toHaveBeenCalled();
