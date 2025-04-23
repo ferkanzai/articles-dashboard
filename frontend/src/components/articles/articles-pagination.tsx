@@ -1,5 +1,6 @@
 import { ChevronsLeftIcon, ChevronsRightIcon } from "lucide-react";
 
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import {
   Pagination,
   PaginationContent,
@@ -9,13 +10,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { usePagination } from "@/hooks/usePagination";
-import { useSearchParams } from "@/hooks/useSearchParams";
 import { cn } from "@/lib/utils";
 
-export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
-  const { lastPage } = usePagination({ pathname });
-  const { pageParam, setPageParam } = useSearchParams({ pathname });
+export default function ArticlesPagination({ pathname, lastPage }: { pathname: "/", lastPage: number }) {
+  const { page } = useSearch({ from: pathname });
+  const navigate = useNavigate({ from: pathname });
+
+  const pageParam = page ?? 1;
+  const isFirstPage = pageParam === 1;
+  const isLastPage = pageParam === lastPage;
 
   const pages = Array.from({ length: lastPage }, (_, i) => i + 1);
   const pagesToShow =
@@ -25,8 +28,6 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
         ? pages.slice(lastPage - 4)
         : pages.slice(0, 4);
 
-  const isFirstPage = pageParam === 1;
-  const isLastPage = pageParam === lastPage;
 
   return (
     <Pagination>
@@ -40,7 +41,12 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
             isActive={!isFirstPage}
             onClick={() => {
               if (!isFirstPage) {
-                setPageParam(1);
+                navigate({
+                  search: {
+                    page: 1,
+                  },
+                  replace: true,
+                });
               }
             }}
             size="default"
@@ -57,7 +63,12 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
             isActive={!isFirstPage}
             onClick={() => {
               if (!isFirstPage) {
-                setPageParam(pageParam - 1);
+                navigate({
+                  search: {
+                    page: pageParam - 1,
+                  },
+                  replace: true,
+                });
               }
             }}
           />
@@ -76,7 +87,12 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
                   ? "bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
                   : "",
               )}
-              onClick={() => setPageParam(pageToShow)}
+              onClick={() => navigate({
+                search: {
+                  page: pageToShow,
+                },
+                replace: true,
+              })}
             >
               {pageToShow}
             </PaginationLink>
@@ -96,7 +112,12 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
             isActive={!isLastPage}
             onClick={() => {
               if (!isLastPage) {
-                setPageParam(pageParam + 1);
+                navigate({
+                  search: {
+                    page: pageParam + 1,
+                  },
+                  replace: true,
+                });
               }
             }}
           />
@@ -110,7 +131,12 @@ export default function ArticlesPagination({ pathname }: { pathname: "/" }) {
             isActive={!isLastPage}
             onClick={() => {
               if (!isLastPage) {
-                setPageParam(lastPage);
+                navigate({
+                  search: {
+                    page: lastPage,
+                  },
+                  replace: true,
+                });
               }
             }}
             size="default"

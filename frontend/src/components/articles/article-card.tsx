@@ -54,8 +54,6 @@ export default function ArticleCard({
     }
   }, [summary]);
 
-  console.log("Summary", summary);
-
   return (
     <>
       <Card className={highlight ? "border-primary" : ""}>

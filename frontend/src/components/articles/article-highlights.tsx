@@ -1,8 +1,8 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
-import ArticleCard from "./article-card";
-import { Spinner } from "./spinner";
 import type { Article } from "@/api/types";
+import ArticleCard from "@/components/articles/article-card";
+import { Spinner } from "@/components/spinner";
 import { api } from "@/api";
 
 const highlightsArticleQueryOptions = (opts: { authorId?: number }) =>
@@ -30,7 +30,7 @@ export default function ArticleHighlights() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full min-h-[630px] sm:min-h-[300px]">
-        <Spinner />
+        <Spinner size="large" />
       </div>
     );
   }
