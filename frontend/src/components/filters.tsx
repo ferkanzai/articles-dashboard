@@ -32,11 +32,11 @@ export default function Filters() {
             <ListFilterIcon className="w-4 h-4" />
             <span>Filters</span>
             <div className="flex gap-1 items-center">
+              <FilterBadge label={`page: ${page}`} value={page} />
               <FilterBadge label={`limit: ${limit}`} value={limit} />
               <FilterBadge label={`authorId: ${authorId}`} value={authorId} />
               <FilterBadge label={`${sortBy}`} value={sortBy} />
               <FilterBadge label={`${sort}`} value={sort} />
-              <FilterBadge label={`page: ${page}`} value={page} />
             </div>
           </Button>
         </PopoverTrigger>

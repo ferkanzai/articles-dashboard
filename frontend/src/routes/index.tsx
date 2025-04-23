@@ -42,7 +42,7 @@ export const Route = createFileRoute("/")({
 });
 
 export default function ArticlesList() {
-  const { page } = Route.useSearch();
+  const { page, limit } = Route.useSearch();
   const { navigate } = useUpdateNavigate();
   const { data } = useSuspenseQuery(articlesQueryOptions(Route.useSearch()));
 
@@ -54,6 +54,12 @@ export default function ArticlesList() {
       navigate({ page: 1 });
     }
   }, [page, lastPage]);
+
+  useEffect(() => {
+    if (!page && !limit) {
+      navigate({ page: 1, limit: 10 });
+    }
+  }, []);
 
   return (
     <div id="articles-list">
