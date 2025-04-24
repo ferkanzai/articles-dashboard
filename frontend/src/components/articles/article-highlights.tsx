@@ -36,7 +36,7 @@ export default function ArticleHighlights() {
   }
 
   if (isError) {
-    return <div className="flex justify-center items-center h-full">Error</div>;
+    return <div className="flex justify-center items-center h-full">Error loading highlighted articles</div>;
   }
 
   const responseHighlights = highlights.data;

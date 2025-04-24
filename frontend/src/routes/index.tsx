@@ -35,13 +35,23 @@ export const Route = createFileRoute("/")({
     ],
   },
   pendingComponent: () => (
-    <div className="min-h-[850px] md:min-h-[350px] flex justify-center items-center">
+    <div className="min-h-[850px] flex justify-center items-center">
       <Spinner />
     </div>
   ),
+  errorComponent: () => (
+    <div className="min-h-[850px] md:min-h-[350px] flex justify-center items-center">
+      <div className="text-red-500 text-2xl font-bold">
+        Error loading articles
+      </div>
+    </div>
+  ),
+  onError: (error) => {
+    console.error(error);
+  },
 });
 
-export default function ArticlesList() {
+function ArticlesList() {
   const { page, limit } = Route.useSearch();
   const { navigate } = useUpdateNavigate();
   const { data } = useSuspenseQuery(articlesQueryOptions(Route.useSearch()));
