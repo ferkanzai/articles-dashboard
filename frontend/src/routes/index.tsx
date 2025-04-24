@@ -46,9 +46,6 @@ export const Route = createFileRoute("/")({
       </div>
     </div>
   ),
-  onError: (error) => {
-    console.error(error);
-  },
 });
 
 function ArticlesList() {
